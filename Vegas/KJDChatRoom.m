@@ -89,7 +89,7 @@
 
 - (void)setupFirebaseWithCompletionBlock:(void (^)(BOOL completed))completionBlock
 {
-   self.firebaseURL = [NSString stringWithFormat:@"https://vivid-inferno-6756.firebaseio.com/%@", self.firebaseRoomURL];
+   self.firebaseURL = [NSString stringWithFormat:@"https://https://boiling-torch-9946.firebaseio.com/%@", self.firebaseRoomURL];
    
    self.firebase = [[Firebase alloc] initWithUrl:self.firebaseURL];
    

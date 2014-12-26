@@ -13,9 +13,11 @@ xcuserdata
 *.xccheckout
 *.moved-aside
 DerivedData
+Docs
 *.hmap
 *.ipa
 *.xcuserstate
+*.DS_Store
 
 # CocoaPods
 #

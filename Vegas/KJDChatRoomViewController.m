@@ -29,8 +29,8 @@
 @property (strong, nonatomic) UITextField *usernameTextField;
 @property (strong, nonatomic) UIButton *doneButton;
 @property (strong, nonatomic) NSLayoutConstraint *usernameViewTop;
-@property (strong, nonatomic) NSLayoutConstraint *usernameViewBottom;
-@property (strong, nonatomic) NSLayoutConstraint *usernameViewLeft;
+@property (strong, nonatomic) NSLayoutConstraint *usernameViewHeight;
+@property (strong, nonatomic) NSLayoutConstraint *usernameViewWidth;
 @property (strong, nonatomic) NSLayoutConstraint *usernameViewRight;
 
 @property (nonatomic)CGRect keyBoardFrame;
@@ -110,9 +110,14 @@
 -(void)setViewMovedUp:(BOOL)moveUp
 {
     CGRect superViewRect = self.view.frame;
+    CGRect usernameViewFramePostKeyboardUp = self.usernameView.frame;
+    usernameViewFramePostKeyboardUp.origin.y += self.keyBoardFrame.size.height;
     
-    UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-    UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+    CGRect usernameViewFramePostKeyboardDown = self.usernameView.frame;
+    usernameViewFramePostKeyboardDown.origin.y -= self.keyBoardFrame.size.height;
+    
+    UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height, 0, 0, 0);
+    UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height, 0, 0, 0);
     
     if (moveUp){
         superViewRect.origin.y -= self.keyBoardFrame.size.height;
@@ -122,7 +127,7 @@
                         animations:^{
                             self.view.frame = superViewRect;
                             self.tableView.contentInset = inset;
-                            //                            [self.view addConstraints:@[newTopConstraint, newBottomConstraint]];
+                            self.usernameView.frame = usernameViewFramePostKeyboardUp;
                         }
                         completion:nil];
         
@@ -134,11 +139,12 @@
                         animations:^{
                             self.view.frame = superViewRect;
                             self.tableView.contentInset = inset;
-                            //                            [self.view addConstraints:@[oldTopConstraint, oldBottomConstraint]];
+                            self.usernameView.frame = usernameViewFramePostKeyboardDown;
                         }
                         completion:nil];
         self.tableView.contentInset = afterInset;
-        
+    }
+
 //        avant jan====
 //        
 //        [UIView beginAnimations:nil context:NULL];
@@ -146,16 +152,20 @@
 //        CGRect superViewRect = self.view.frame;
 //        UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
 //        UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-//        if (moveUp){
+//        if (moveUp)
+//        {
 //            self.tableView.contentInset = inset;
 //            superViewRect.origin.y -= self.keyBoardFrame.size.height;
-//        }else{
+//        }
+//        else
+//        {
 //            self.tableView.contentInset = afterInset;
 //            superViewRect.origin.y += self.keyBoardFrame.size.height;
 //        }
 //        self.view.frame = superViewRect;
 //        [UIView commitAnimations];
-    }
+
+    
 }
 
 //jan
@@ -214,23 +224,23 @@
                                                          toItem:self.view
                                                       attribute:NSLayoutAttributeTop
                                                      multiplier:1.0
-                                                       constant:60.0];
+                                                       constant:self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height];
 
-    self.usernameViewBottom=[NSLayoutConstraint constraintWithItem:self.usernameView
-                                                         attribute:NSLayoutAttributeBottom
+    self.usernameViewHeight=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                         attribute:NSLayoutAttributeHeight
                                                          relatedBy:NSLayoutRelationEqual
                                                             toItem:self.view
-                                                         attribute:NSLayoutAttributeBottom
-                                                        multiplier:0.4
+                                                         attribute:NSLayoutAttributeHeight
+                                                        multiplier:0.2
                                                           constant:0.0];
 
-    self.usernameViewLeft=[NSLayoutConstraint constraintWithItem:self.usernameView
-                                                       attribute:NSLayoutAttributeLeft
+    self.usernameViewWidth=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                       attribute:NSLayoutAttributeWidth
                                                        relatedBy:NSLayoutRelationEqual
                                                           toItem:self.view
-                                                       attribute:NSLayoutAttributeLeft
-                                                      multiplier:1.0
-                                                        constant:100.0];
+                                                       attribute:NSLayoutAttributeWidth
+                                                      multiplier:2/3.0f
+                                                        constant:0.0];
 
     self.usernameViewRight=[NSLayoutConstraint constraintWithItem:self.usernameView
                                                         attribute:NSLayoutAttributeRight
@@ -240,7 +250,7 @@
                                                        multiplier:1.0
                                                          constant:0.0];
 
-    [self.view addConstraints:@[self.usernameViewTop, self.usernameViewBottom, self.usernameViewLeft, self.usernameViewRight]];
+    [self.view addConstraints:@[self.usernameViewTop, self.usernameViewHeight, self.usernameViewWidth, self.usernameViewRight]];
 
 
     self.usernameTextField=[[UITextField alloc]init];
@@ -259,15 +269,15 @@
                                                                      toItem:self.usernameView
                                                                   attribute:NSLayoutAttributeTop
                                                                  multiplier:1.0
-                                                                   constant:50.0];
+                                                                   constant:self.usernameTextField.frame.size.height];
 
-    NSLayoutConstraint *textFieldBottom=[NSLayoutConstraint constraintWithItem:self.usernameTextField
-                                                                     attribute:NSLayoutAttributeBottom
+    NSLayoutConstraint *textFieldHeight=[NSLayoutConstraint constraintWithItem:self.usernameTextField
+                                                                     attribute:NSLayoutAttributeHeight
                                                                      relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.usernameView
-                                                                     attribute:NSLayoutAttributeBottom
+                                                                        toItem:self.inputTextField
+                                                                     attribute:NSLayoutAttributeHeight
                                                                     multiplier:1.0
-                                                                      constant:-80.0];
+                                                                      constant:0.0];
 
     NSLayoutConstraint *textFieldLeft=[NSLayoutConstraint constraintWithItem:self.usernameTextField
                                                                    attribute:NSLayoutAttributeLeft
@@ -285,7 +295,7 @@
                                                                    multiplier:1.0
                                                                      constant:-20.0];
 
-    [self.view addConstraints:@[textFieldTop, textFieldBottom, textFieldLeft, textFieldRight]];
+    [self.view addConstraints:@[textFieldTop, textFieldHeight, textFieldLeft, textFieldRight]];
 
     self.doneButton=[[UIButton alloc]init];
     [self.doneButton addTarget:self action:@selector(enterUserName) forControlEvents:UIControlEventTouchUpInside];
@@ -537,9 +547,6 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"KJDChatRoomImageCellRight" bundle:nil] forCellReuseIdentifier:@"imageCellRight"];
     
     self.tableView.scrollEnabled=YES;
-    
-    NSLog(@" titleView height : %f", self.navigationItem.titleView.frame.size.height);
-    NSLog(@" navbar height : %f", self.navigationController.navigationBar.frame.size.height);
     
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -980,9 +987,7 @@
                 rightCell.backgroundColor=[UIColor clearColor];
                 [rightCell.mediaImageView setBackgroundColor:[UIColor clearColor]];
                 
-                NSLog(@"cell content view subviws BEFORE: %@", rightCell.contentView.subviews);
                 [rightCell.mediaImageView removeFromSuperview];
-                                NSLog(@"cell content view subviws AFTER: %@", rightCell.contentView.subviews);
                 
                 player.view .frame = CGRectMake(170, 30, 141, 142);
                 if ([rightCell.contentView.subviews count] == 1)

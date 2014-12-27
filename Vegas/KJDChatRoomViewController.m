@@ -9,6 +9,8 @@
 #import "KJDChatRoomImageCellRight.h"
 #import "KJDChatRoomImageCellLeft.h"
 #import "AppDelegate.h"
+#import <RNBlurModalView.h> 
+
 
 
 @interface KJDChatRoomViewController ()
@@ -21,6 +23,15 @@
 @property (strong, nonatomic) UIBarButtonItem *settingsButton;
 
 @property (strong,nonatomic) MPMoviePlayerController* playerController;
+
+//jan
+@property (strong, nonatomic) UIView *usernameView;
+@property (strong, nonatomic) UITextField *usernameTextField;
+@property (strong, nonatomic) UIButton *doneButton;
+@property (strong, nonatomic) NSLayoutConstraint *usernameViewTop;
+@property (strong, nonatomic) NSLayoutConstraint *usernameViewBottom;
+@property (strong, nonatomic) NSLayoutConstraint *usernameViewLeft;
+@property (strong, nonatomic) NSLayoutConstraint *usernameViewRight;
 
 @property (nonatomic)CGRect keyBoardFrame;
 @property(strong,nonatomic)NSMutableArray *messages;
@@ -95,6 +106,230 @@
     
 }
 
+//jan
+-(void)setViewMovedUp:(BOOL)moveUp
+{
+    CGRect superViewRect = self.view.frame;
+    
+    UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+    UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+    
+    if (moveUp){
+        superViewRect.origin.y -= self.keyBoardFrame.size.height;
+        [UIView transitionWithView:self.usernameView
+                          duration:0.3
+                           options:0
+                        animations:^{
+                            self.view.frame = superViewRect;
+                            self.tableView.contentInset = inset;
+                            //                            [self.view addConstraints:@[newTopConstraint, newBottomConstraint]];
+                        }
+                        completion:nil];
+        
+    }else{
+        superViewRect.origin.y += self.keyBoardFrame.size.height;
+        [UIView transitionWithView:self.usernameView
+                          duration:0.3
+                           options:0
+                        animations:^{
+                            self.view.frame = superViewRect;
+                            self.tableView.contentInset = inset;
+                            //                            [self.view addConstraints:@[oldTopConstraint, oldBottomConstraint]];
+                        }
+                        completion:nil];
+        self.tableView.contentInset = afterInset;
+        
+//        avant jan====
+//        
+//        [UIView beginAnimations:nil context:NULL];
+//        [UIView setAnimationDuration:0.3];
+//        CGRect superViewRect = self.view.frame;
+//        UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+//        UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+//        if (moveUp){
+//            self.tableView.contentInset = inset;
+//            superViewRect.origin.y -= self.keyBoardFrame.size.height;
+//        }else{
+//            self.tableView.contentInset = afterInset;
+//            superViewRect.origin.y += self.keyBoardFrame.size.height;
+//        }
+//        self.view.frame = superViewRect;
+//        [UIView commitAnimations];
+    }
+}
+
+//jan
+-(void)enterUserName
+{
+    if (![self.usernameTextField.text isEqualToString:@""]) {
+        self.user.name=self.usernameTextField.text;
+        [UIView transitionWithView:self.usernameView
+                          duration:0.4
+                           options:UIViewAnimationOptionTransitionFlipFromRight
+                        animations:^{
+                            self.usernameView.hidden=YES;
+                        }
+                        completion:nil];
+        [self.tableView reloadData];
+    }else{
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Username field is empty" message:@"Please insert a valid username"];
+        [modal show];
+    }
+}
+
+//jan
+-(void)toggleUsernameView{
+    if (self.usernameView.hidden) {
+        [UIView transitionWithView:self.usernameView
+                          duration:0.4
+                           options:UIViewAnimationOptionTransitionFlipFromRight
+                        animations:^{
+                            self.usernameView.hidden=NO;
+                        }
+                        completion:nil];
+    }else{
+        [UIView transitionWithView:self.usernameView
+                          duration:0.4
+                           options:UIViewAnimationOptionTransitionFlipFromRight
+                        animations:^{
+                            self.usernameView.hidden=YES;
+                        }
+                        completion:nil];
+    }
+}
+
+//jan
+-(void)setupUsernameView{
+    self.usernameView=[[UIView alloc]init];
+    UIColor *backgroundColor=[UIColor colorWithRed:0 green:0 blue:0 alpha:0.2];
+    self.usernameView.backgroundColor=backgroundColor;
+    self.usernameView.layer.cornerRadius=10;
+    self.usernameView.hidden=YES;
+    self.usernameView.translatesAutoresizingMaskIntoConstraints=NO;
+    [self.view addSubview:self.usernameView];
+
+    self.usernameViewTop=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                      attribute:NSLayoutAttributeTop
+                                                      relatedBy:NSLayoutRelationEqual
+                                                         toItem:self.view
+                                                      attribute:NSLayoutAttributeTop
+                                                     multiplier:1.0
+                                                       constant:60.0];
+
+    self.usernameViewBottom=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self.view
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:0.4
+                                                          constant:0.0];
+
+    self.usernameViewLeft=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                       attribute:NSLayoutAttributeLeft
+                                                       relatedBy:NSLayoutRelationEqual
+                                                          toItem:self.view
+                                                       attribute:NSLayoutAttributeLeft
+                                                      multiplier:1.0
+                                                        constant:100.0];
+
+    self.usernameViewRight=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                        attribute:NSLayoutAttributeRight
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:self.view
+                                                        attribute:NSLayoutAttributeRight
+                                                       multiplier:1.0
+                                                         constant:0.0];
+
+    [self.view addConstraints:@[self.usernameViewTop, self.usernameViewBottom, self.usernameViewLeft, self.usernameViewRight]];
+
+
+    self.usernameTextField=[[UITextField alloc]init];
+    self.usernameTextField.delegate=self;
+    self.usernameTextField.layer.borderWidth=1;
+    self.usernameTextField.layer.cornerRadius=7;
+    self.usernameTextField.backgroundColor=[UIColor whiteColor];
+    self.usernameTextField.textAlignment=NSTextAlignmentCenter;
+    self.usernameTextField.placeholder=@"Set username";
+    self.usernameTextField.translatesAutoresizingMaskIntoConstraints=NO;
+    [self.usernameView addSubview:self.usernameTextField];
+
+    NSLayoutConstraint *textFieldTop=[NSLayoutConstraint constraintWithItem:self.usernameTextField
+                                                                  attribute:NSLayoutAttributeTop
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.usernameView
+                                                                  attribute:NSLayoutAttributeTop
+                                                                 multiplier:1.0
+                                                                   constant:50.0];
+
+    NSLayoutConstraint *textFieldBottom=[NSLayoutConstraint constraintWithItem:self.usernameTextField
+                                                                     attribute:NSLayoutAttributeBottom
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.usernameView
+                                                                     attribute:NSLayoutAttributeBottom
+                                                                    multiplier:1.0
+                                                                      constant:-80.0];
+
+    NSLayoutConstraint *textFieldLeft=[NSLayoutConstraint constraintWithItem:self.usernameTextField
+                                                                   attribute:NSLayoutAttributeLeft
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.usernameView
+                                                                   attribute:NSLayoutAttributeLeft
+                                                                  multiplier:1.0
+                                                                    constant:20.0];
+
+    NSLayoutConstraint *textFieldRight=[NSLayoutConstraint constraintWithItem:self.usernameTextField
+                                                                    attribute:NSLayoutAttributeRight
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.usernameView
+                                                                    attribute:NSLayoutAttributeRight
+                                                                   multiplier:1.0
+                                                                     constant:-20.0];
+
+    [self.view addConstraints:@[textFieldTop, textFieldBottom, textFieldLeft, textFieldRight]];
+
+    self.doneButton=[[UIButton alloc]init];
+    [self.doneButton addTarget:self action:@selector(enterUserName) forControlEvents:UIControlEventTouchUpInside];
+    [self.doneButton setTitle:@"Done" forState:UIControlStateNormal];
+    [self.doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.doneButton.layer.cornerRadius=7;
+    self.doneButton.translatesAutoresizingMaskIntoConstraints=NO;
+    [self.usernameView addSubview:self.doneButton];
+
+    NSLayoutConstraint *buttonTop=[NSLayoutConstraint constraintWithItem:self.doneButton
+                                                               attribute:NSLayoutAttributeTop
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.usernameTextField
+                                                               attribute:NSLayoutAttributeTop
+                                                              multiplier:1.0
+                                                                constant:50.0];
+
+    NSLayoutConstraint *buttonBottom=[NSLayoutConstraint constraintWithItem:self.doneButton
+                                                                  attribute:NSLayoutAttributeBottom
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:self.usernameView
+                                                                  attribute:NSLayoutAttributeBottom
+                                                                 multiplier:1.0
+                                                                   constant:-30.0];
+
+    NSLayoutConstraint *buttonLeft=[NSLayoutConstraint constraintWithItem:self.doneButton
+                                                                attribute:NSLayoutAttributeLeft
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:self.usernameTextField
+                                                                attribute:NSLayoutAttributeLeft
+                                                               multiplier:1.0
+                                                                 constant:0.0];
+
+    NSLayoutConstraint *buttonRight=[NSLayoutConstraint constraintWithItem:self.doneButton
+                                                                 attribute:NSLayoutAttributeRight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.usernameTextField
+                                                                 attribute:NSLayoutAttributeRight
+                                                                multiplier:1.0
+                                                                  constant:0.0];
+
+    [self.view addConstraints:@[buttonTop, buttonBottom, buttonLeft, buttonRight]];
+}
+
 -(void)didMoveToParentViewController:(UIViewController *)parent
 {
     if (![parent isEqual:self.parentViewController])
@@ -105,8 +340,6 @@
 
 -(void)removeUserFromChatRoom
 {
-    //do your stuff
-    //but don't forget to dismiss the viewcontroller
     NSInteger integerCount = [self.chatRoom.userCount integerValue] - 1;
     self.chatRoom.userCount = [NSNumber numberWithInteger:integerCount];
     
@@ -122,47 +355,6 @@
 }
 
 
-
-
-    /*
-     To ensure that when everybody leaves, chat room is deleted.
-     potential problem: triggered when map opened
-     ======
-     potential solution:
-     
-     Another solution is to add a custom responder to the back button. You can modify your viewController's init method as follow:
-     
-     - (id)init {
-     if (self = [super init]) {
-     //other your stuff goes here
-     //...
-     //here we customize the target and action for the backBarButtonItem
-     //every navigationController has one of this item automatically configured to pop back
-     self.navigationItem.backBarButtonItem.target = self;
-     self.navigationItem.backBarButtonItem.action = @selector(backButtonDidPressed:);
-     }
-     return self;
-     }
-     
-     
-     and then you can use a selector method as the following. Be sure to dismiss correctly the viewController, otherwise your navigation controller won't pop as wanted.
-     
-     - (void)backButtonDidPressed:(id)aResponder {
-     //do your stuff
-     //but don't forget to dismiss the viewcontroller
-     [self.navigationController popViewControllerAnimated:TRUE];
-     }
-     ======
-     
-     count = count -1
-     
-     firebase set value count
-     
-     if count ==0, firebase remove
-     
-     */
-
-
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
 {
     return NO;
@@ -172,7 +364,8 @@
     [self.inputTextField resignFirstResponder];
 }
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated
+{
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
     [self.navigationController setNavigationBarHidden:NO];
@@ -198,22 +391,22 @@
     }
 }
 
--(void)setViewMovedUp:(BOOL)moveUp{
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    CGRect superViewRect = self.view.frame;
-    UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-    UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-    if (moveUp){
-        self.tableView.contentInset = inset;
-        superViewRect.origin.y -= self.keyBoardFrame.size.height;
-    }else{
-        self.tableView.contentInset = afterInset;
-        superViewRect.origin.y += self.keyBoardFrame.size.height;
-    }
-    self.view.frame = superViewRect;
-    [UIView commitAnimations];
-}
+//-(void)setViewMovedUp:(BOOL)moveUp{
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:0.3];
+//    CGRect superViewRect = self.view.frame;
+//    UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+//    UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
+//    if (moveUp){
+//        self.tableView.contentInset = inset;
+//        superViewRect.origin.y -= self.keyBoardFrame.size.height;
+//    }else{
+//        self.tableView.contentInset = afterInset;
+//        superViewRect.origin.y += self.keyBoardFrame.size.height;
+//    }
+//    self.view.frame = superViewRect;
+//    [UIView commitAnimations];
+//}
 
 //-(BOOL)textFieldShouldReturn:(UITextField *)textField{
 //    [textField resignFirstResponder];
@@ -231,6 +424,7 @@
     [self setupSendButton];
     [self setupMediaButton];
     [self setUpSettingsButton];
+    [self setupUsernameView];
 }
 
 -(void)setupNavigationBar{
@@ -303,7 +497,7 @@
 
 -(void) setUpSettingsButton
 {
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings18"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonTapped)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings18"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUsernameView)];//settingsButtonTapped)];
     rightButton.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = rightButton;
 }

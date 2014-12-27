@@ -22,20 +22,17 @@
     return [self initWithUser:self.user];
 }
 
--(void)fetchMessagesFromCloud:(FDataSnapshot *)snapshot withBlock:(void (^)(NSMutableArray *messages))completionBlock{
-   
-
+-(void)fetchMessagesFromCloud:(FDataSnapshot *)snapshot withBlock:(void (^)(NSMutableArray *messages))completionBlock
+{
     NSMutableArray *messagesArray=[[NSMutableArray alloc]init];
    if ([snapshot.value isKindOfClass:[NSArray class]])
    {
       [messagesArray addObjectsFromArray:snapshot.value];
-
    }
    else if ([snapshot.value isKindOfClass:[NSDictionary class]])
    {
       [messagesArray addObject:snapshot.value];
       NSLog(@"ocurrio");
-
    }
    else if ([snapshot.value isKindOfClass:[NSString class]])
    {
@@ -65,7 +62,6 @@
       if (snapshot.value != [NSNull null])
       {
          self.userCount = snapshot.value[@"userCount"];
-         
       }
    }
    completionBlock(self.userCount);
@@ -77,8 +73,6 @@
    
    [self.userCountFireBase observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
     {
-       //did not get called!
-       
        [self fetchUserCountFromCloud:snapshot withBlock:^(NSNumber *count)
        {
           self.userCount = count;
@@ -98,7 +92,6 @@
 
 - (void)setUpContentFirebaseWithCompletionBlock:(void (^)(BOOL completed))completionBlock
 {
-   
    self.contentFireBase = [self.firebase childByAppendingPath:@"content"];
    
    [self.contentFireBase observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
@@ -109,6 +102,31 @@
              completionBlock(YES);
           }];
       }];
+}
+
+-(void)fetchNameSwitchFromCloud:(FDataSnapshot *)snapshot withBlock:(void (^)(NSDictionary* nameChange))isCompleted
+{
+   if (! (snapshot.value == [NSNull null]))
+   {
+      if ([snapshot.value[@"oldName"] isEqual:self.user.name])
+      {
+         self.user.name = snapshot.value[@"newName"];
+      }
+      isCompleted(snapshot.value);
+   }
+}
+
+-(void)setUpNameSwitchFireBaseWithCompletionBlock:(void (^)(NSDictionary* nameChange))completionBlock
+{
+   self.nameSwitchFireBase= [self.firebase childByAppendingPath:@"nameSwitch"];
+   
+   [self.nameSwitchFireBase observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+       [self fetchNameSwitchFromCloud:snapshot withBlock:^(NSDictionary *nameChange)
+       {
+          completionBlock(nameChange);
+        }];
+    }];
 }
 
 

@@ -82,9 +82,23 @@
               {
                   self.userCount = self.chatRoom.userCount;
                   [self setupNavigationBar];
-                  
-                  //moved to chatRoom
               }];
+             
+             [self.chatRoom setUpNameSwitchFireBaseWithCompletionBlock:^(NSDictionary *nameChange)
+             {
+                 if ([nameChange[@"oldName"] isEqual:self.user.name])
+                 {
+                     self.user.name = nameChange[@"newName"];
+                 }
+                 
+                 for (NSMutableDictionary* message in self.messages)
+                 {
+                     if ([message[@"user"] isEqual:nameChange[@"oldName"]]) {
+                         message[@"user"] = nameChange[@"newName"];
+                     }
+                 }
+                 
+             }];
          }
      }];
     
@@ -151,15 +165,10 @@
     if (![self.usernameTextField.text isEqualToString:@""])
     {
         NSString* oldName= self.user.name;
-        self.user.name=self.usernameTextField.text;
+        NSString* newName = self.usernameTextField.text;
         
-        for (NSMutableDictionary* message in self.messages)
-        {
-            if ([message[@"user"] isEqual:oldName]) {
-                message[@"user"] = self.user.name;
-            }
-        }
-        
+         [self.chatRoom.nameSwitchFireBase setValue:@{@"newName":newName,
+                                                      @"oldName":oldName}];
         
         [UIView transitionWithView:self.usernameView
                           duration:0.4

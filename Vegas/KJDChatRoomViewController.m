@@ -101,7 +101,6 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissKeyboard)];
-    tap.cancelsTouchesInView = YES;
     [self.view addGestureRecognizer:tap];
     
 }
@@ -144,35 +143,24 @@
                         completion:nil];
         self.tableView.contentInset = afterInset;
     }
-
-//        avant jan====
-//        
-//        [UIView beginAnimations:nil context:NULL];
-//        [UIView setAnimationDuration:0.3];
-//        CGRect superViewRect = self.view.frame;
-//        UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-//        UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-//        if (moveUp)
-//        {
-//            self.tableView.contentInset = inset;
-//            superViewRect.origin.y -= self.keyBoardFrame.size.height;
-//        }
-//        else
-//        {
-//            self.tableView.contentInset = afterInset;
-//            superViewRect.origin.y += self.keyBoardFrame.size.height;
-//        }
-//        self.view.frame = superViewRect;
-//        [UIView commitAnimations];
-
-    
 }
 
 //jan
 -(void)enterUserName
 {
-    if (![self.usernameTextField.text isEqualToString:@""]) {
+    if (![self.usernameTextField.text isEqualToString:@""])
+    {
+        NSString* oldName= self.user.name;
         self.user.name=self.usernameTextField.text;
+        
+        for (NSMutableDictionary* message in self.messages)
+        {
+            if ([message[@"user"] isEqual:oldName]) {
+                message[@"user"] = self.user.name;
+            }
+        }
+        
+        
         [UIView transitionWithView:self.usernameView
                           duration:0.4
                            options:UIViewAnimationOptionTransitionFlipFromRight
@@ -180,8 +168,12 @@
                             self.usernameView.hidden=YES;
                         }
                         completion:nil];
+        
+        [self dismissKeyboard];
         [self.tableView reloadData];
-    }else{
+    }
+    else
+    {
         RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Username field is empty" message:@"Please insert a valid username"];
         [modal show];
     }
@@ -372,6 +364,7 @@
 
 -(void)dismissKeyboard {
     [self.inputTextField resignFirstResponder];
+    [self.usernameTextField resignFirstResponder];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -416,11 +409,6 @@
 //    }
 //    self.view.frame = superViewRect;
 //    [UIView commitAnimations];
-//}
-
-//-(BOOL)textFieldShouldReturn:(UITextField *)textField{
-//    [textField resignFirstResponder];
-//    return YES;
 //}
 
 - (void)didReceiveMemoryWarning {

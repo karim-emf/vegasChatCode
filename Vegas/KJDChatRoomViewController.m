@@ -116,7 +116,7 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissKeyboard)];
     tap.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tap];
+    [self.tableView addGestureRecognizer:tap];
 }
 
 //jan
@@ -587,6 +587,7 @@
 -(void)sendButtonNormal
 {
     [self dismissKeyboard];
+    
     if (![self.inputTextField.text isEqualToString:@""] && ![self.inputTextField.text isEqualToString:@" "]) {
         NSString *message = self.inputTextField.text;
         self.sendButton.titleLabel.textColor=[UIColor grayColor];
@@ -967,8 +968,9 @@
             MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
             
             self.playerController = player;
+            player.shouldAutoplay = NO;
             
-            UIImage *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+//            UIImage *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
             
             if ([content[@"user"] isEqualToString:self.user.name]) {
                 KJDChatRoomImageCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellRight"];
@@ -981,16 +983,17 @@
                 
                 [rightCell.mediaImageView removeFromSuperview];
                 
-                player.view .frame = CGRectMake(170, 30, 141, 142);
-                if ([rightCell.contentView.subviews count] == 1)
-                {
-                    [rightCell.contentView addSubview:player.view];
-                }
+                player.view.frame = CGRectMake(170, 30, 141, 142);
                 
                 player.scalingMode = MPMovieScalingModeAspectFit;
                 [player setControlStyle:MPMovieControlStyleDefault];
                 player.repeatMode = MPMovieRepeatModeNone;
                 [player play];
+                
+                if ([rightCell.contentView.subviews count] == 1)
+                {
+                    [rightCell.contentView addSubview:player.view];
+                }
                 
                 return rightCell;
             }
@@ -1008,15 +1011,15 @@
                 
                 player.view .frame = CGRectMake(8, 30, 141, 142);
                 
-                if ([leftCell.contentView.subviews count] == 1)
-                {
-                    [leftCell.contentView addSubview:player.view];
-                }
-                
                 player.scalingMode = MPMovieScalingModeAspectFit;
                 [player setControlStyle:MPMovieControlStyleDefault];
                 player.repeatMode = MPMovieRepeatModeNone;
                 [player play];
+                
+                if ([leftCell.contentView.subviews count] == 1)
+                {
+                    [leftCell.contentView addSubview:player.view];
+                }
                 
                 return leftCell;
             }
@@ -1129,12 +1132,10 @@
     
     if (content[@"map"])
     {
-        //fix this!!!!!!!
         UITableViewCell* mapCell = [self.tableView cellForRowAtIndexPath:indexPath];
-        
         KJDImageDisplayViewController* imageDisplayVC = [[KJDImageDisplayViewController alloc]init];
         
-        imageDisplayVC.map = mapCell.contentView.subviews[0];
+        imageDisplayVC.map = mapCell.contentView.subviews[0];//((KJDChatRoomImageCellLeft *)mapCell).mediaImageView;
         
         [imageDisplayVC setModalPresentationStyle:UIModalPresentationFullScreen];
         
@@ -1142,6 +1143,40 @@
         {
         }];
     }
+//    else if (content[@"video"])
+//    {
+//        MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
+//        player.view.frame = CGRectMake(170, 30, 141, 142);
+//        
+//        player.scalingMode = MPMovieScalingModeAspectFit;
+//        [player setControlStyle:MPMovieControlStyleDefault];
+//        player.repeatMode = MPMovieRepeatModeNone;
+//        [player play];
+//        UITableViewCell* videoCell = [self.tableView cellForRowAtIndexPath:indexPath];
+//        KJDChatRoomImageCellRight *rightCell=((KJDChatRoomImageCellRight *) videoCell);
+//        if ([rightCell.contentView.subviews count] == 1)
+//        {
+//            [rightCell.contentView addSubview:player.view];
+//        }
+//    }
 }
+
+//- (void) moviePlayBackDidFinish:(NSNotification*)notification
+//{
+//    MPMoviePlayerController *player = [notification object];
+//    [[NSNotificationCenter defaultCenter]
+//     removeObserver:self
+//     name:MPMoviePlayerPlaybackDidFinishNotification
+//     object:player];
+//    
+//    if ([player
+//         respondsToSelector:@selector(setFullscreen:animated:)])
+//    {
+//        [player play];
+//[self.movieController stop];
+//[self.movieController prepareToPlay];
+//[self.movieController pause];
+//    }
+//}
 
 @end

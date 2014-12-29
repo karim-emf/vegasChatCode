@@ -7,6 +7,8 @@
 //
 
 #import "KJDImageDisplayViewController.h"
+#import "KJDChatRoomImageCellLeft.h"
+#import "KJDChatRoomImageCellRight.h"
 
 @interface KJDImageDisplayViewController ()
 
@@ -125,9 +127,16 @@
 {
     self.doneButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
     self.doneButton.titleLabel.textColor=[UIColor whiteColor];
-    [self dismissViewControllerAnimated:YES completion:^{
-        
+    [self dismissViewControllerAnimated:YES completion:^
+    {
     }];
+}
+
+-(UIImage *)stringToUIImage:(NSString *)string
+{
+    NSData *data = [[NSData alloc]initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    return [UIImage imageWithData:data];
 }
 
 -(void)doneButtonNormal

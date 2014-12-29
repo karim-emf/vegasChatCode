@@ -76,20 +76,12 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated
-
 {
     self.currentCoordinates = [[CLLocation alloc] initWithLatitude:38.8833 longitude:-77.0167];
     [self.locationManager startUpdatingLocation];
 //    [self.navigationController setNavigationBarHidden:NO];
 }
 
-//-(void)setupNavigationBar
-//{
-//    self.navigationItem.title=@"Share this location?";
-//    self.navigationController.navigationBar.translucent = YES;
-//    self.navigationController.view.backgroundColor = [UIColor clearColor];
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-//}
 
 -(void) setUpMapView
 {
@@ -130,11 +122,6 @@
                                                                       constant:0.0];
     
     [self.view addConstraints:@[mapViewTop, mapViewBottom, mapViewWidth, mapViewLeft]];
-}
-
--(void) setUpUpperBar
-{
-    
 }
 
 -(void) setUpYesButton

@@ -115,8 +115,8 @@
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissKeyboard)];
+    tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
-    
 }
 
 //jan
@@ -232,7 +232,7 @@
                                                          relatedBy:NSLayoutRelationEqual
                                                             toItem:self.view
                                                          attribute:NSLayoutAttributeHeight
-                                                        multiplier:0.2
+                                                        multiplier:0.15
                                                           constant:0.0];
 
     self.usernameViewWidth=[NSLayoutConstraint constraintWithItem:self.usernameView
@@ -270,7 +270,7 @@
                                                                      toItem:self.usernameView
                                                                   attribute:NSLayoutAttributeTop
                                                                  multiplier:1.0
-                                                                   constant:self.usernameTextField.frame.size.height];
+                                                                   constant:10];
 
     NSLayoutConstraint *textFieldHeight=[NSLayoutConstraint constraintWithItem:self.usernameTextField
                                                                      attribute:NSLayoutAttributeHeight
@@ -312,16 +312,16 @@
                                                                   toItem:self.usernameTextField
                                                                attribute:NSLayoutAttributeTop
                                                               multiplier:1.0
-                                                                constant:50.0];
-
+                                                                constant:25.0];
+    
     NSLayoutConstraint *buttonBottom=[NSLayoutConstraint constraintWithItem:self.doneButton
                                                                   attribute:NSLayoutAttributeBottom
                                                                   relatedBy:NSLayoutRelationEqual
                                                                      toItem:self.usernameView
                                                                   attribute:NSLayoutAttributeBottom
                                                                  multiplier:1.0
-                                                                   constant:-30.0];
-
+                                                                   constant:-15.0];
+    
     NSLayoutConstraint *buttonLeft=[NSLayoutConstraint constraintWithItem:self.doneButton
                                                                 attribute:NSLayoutAttributeLeft
                                                                 relatedBy:NSLayoutRelationEqual
@@ -329,7 +329,7 @@
                                                                 attribute:NSLayoutAttributeLeft
                                                                multiplier:1.0
                                                                  constant:0.0];
-
+    
     NSLayoutConstraint *buttonRight=[NSLayoutConstraint constraintWithItem:self.doneButton
                                                                  attribute:NSLayoutAttributeRight
                                                                  relatedBy:NSLayoutRelationEqual
@@ -337,7 +337,7 @@
                                                                  attribute:NSLayoutAttributeRight
                                                                 multiplier:1.0
                                                                   constant:0.0];
-
+    
     [self.view addConstraints:@[buttonTop, buttonBottom, buttonLeft, buttonRight]];
 }
 
@@ -507,11 +507,6 @@
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings18"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUsernameView)];//settingsButtonTapped)];
     rightButton.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = rightButton;
-}
-
--(void) settingsButtonTapped
-{
-    
 }
 
 -(void) setHeaderTitle:(NSString*)headerTitle andSubtitle:(NSString*)headerSubtitle {
@@ -1143,8 +1138,8 @@
         
         [imageDisplayVC setModalPresentationStyle:UIModalPresentationFullScreen];
         
-        [self presentViewController:imageDisplayVC animated:YES completion:^{
-            
+        [self presentViewController:imageDisplayVC animated:YES completion:^
+        {
         }];
     }
 }

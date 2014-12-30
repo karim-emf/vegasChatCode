@@ -56,6 +56,7 @@
 		8AD8FB121A4C973200187553 /* photo-abstract-71.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB111A4C973200187553 /* photo-abstract-71.png */; };
 		8AD8FB141A4C993A00187553 /* photo-abstract-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB131A4C993A00187553 /* photo-abstract-7.png */; };
 		8AD8FB161A4D075100187553 /* settings18.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB151A4D075100187553 /* settings18.png */; };
+		8AD8FB1A1A51F13800187553 /* KJDMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD8FB191A51F13800187553 /* KJDMessageCell.m */; };
 		8AF7FF5A1A3BAE7800A9B4E4 /* vegasAppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF7FF591A3BAE7800A9B4E4 /* vegasAppIcon.png */; };
 		8AF7FF5C1A3BB09800A9B4E4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF7FF5B1A3BB09800A9B4E4 /* Default-568h@2x.png */; };
 		B19C3A341A1FE748002868B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C3A331A1FE748002868B1 /* main.m */; };
@@ -143,6 +144,8 @@
 		8AD8FB111A4C973200187553 /* photo-abstract-71.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-abstract-71.png"; sourceTree = "<group>"; };
 		8AD8FB131A4C993A00187553 /* photo-abstract-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-abstract-7.png"; sourceTree = "<group>"; };
 		8AD8FB151A4D075100187553 /* settings18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings18.png; sourceTree = "<group>"; };
+		8AD8FB181A51F13800187553 /* KJDMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDMessageCell.h; sourceTree = "<group>"; };
+		8AD8FB191A51F13800187553 /* KJDMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDMessageCell.m; sourceTree = "<group>"; };
 		8AF7FF591A3BAE7800A9B4E4 /* vegasAppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vegasAppIcon.png; sourceTree = "<group>"; };
 		8AF7FF5B1A3BB09800A9B4E4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		B19C3A331A1FE748002868B1 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -190,7 +193,6 @@
 				0B642B741A21A5DA00773D5F /* KJDChatRoomTableViewCell.h */,
 				0B642B751A21A5DA00773D5F /* KJDChatRoomTableViewCell.m */,
 				0BA1E8031A23F9AB0091DC3C /* KJDChatRoomTableViewCell.xib */,
-				8A45F54E1A38B2F700A69E17 /* JanCells */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -237,6 +239,8 @@
 		0BB036B11A1FE0EE0021CCF4 /* Vegas */ = {
 			isa = PBXGroup;
 			children = (
+				8AD8FB171A51F10500187553 /* karimCells */,
+				8A45F54E1A38B2F700A69E17 /* JanCells */,
 				8A45F54D1A38B28100A69E17 /* myXibs */,
 				0BAA8C611A243F1800B7E5AF /* Images */,
 				0BA1E8001A23F9850091DC3C /* Views */,
@@ -325,6 +329,15 @@
 				8A45F55A1A38B31500A69E17 /* KJDChatRoomImageCellRight.m */,
 			);
 			name = JanCells;
+			sourceTree = "<group>";
+		};
+		8AD8FB171A51F10500187553 /* karimCells */ = {
+			isa = PBXGroup;
+			children = (
+				8AD8FB181A51F13800187553 /* KJDMessageCell.h */,
+				8AD8FB191A51F13800187553 /* KJDMessageCell.m */,
+			);
+			name = karimCells;
 			sourceTree = "<group>";
 		};
 		B19C3A2E1A1FE6C9002868B1 /* Model */ = {
@@ -534,6 +547,7 @@
 				0B42BD6F1A1FE80200FCEFE7 /* (null) in Sources */,
 				8A45F5621A38B31500A69E17 /* KJDChatRoomImageCellRight.m in Sources */,
 				0BFE380B1A1FE1C200EA4D28 /* KJDUser.m in Sources */,
+				8AD8FB1A1A51F13800187553 /* KJDMessageCell.m in Sources */,
 				0BFE38101A1FE1EB00EA4D28 /* AppDelegate.m in Sources */,
 				0B2430361A2698B2007E60C1 /* KJDMapKitViewController.m in Sources */,
 				8A45F5411A389F6E00A69E17 /* KJDMediaCellLeft.m in Sources */,

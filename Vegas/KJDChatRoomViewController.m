@@ -10,6 +10,7 @@
 #import "KJDChatRoomImageCellLeft.h"
 #import "AppDelegate.h"
 #import <RNBlurModalView.h> 
+#import "KJDMessageCell.h"
 
 
 
@@ -51,6 +52,9 @@
     backgroundView.backgroundColor = [UIColor blackColor];
     [self.view addSubview:backgroundImage];
     [self.view sendSubviewToBack:backgroundImage];
+    
+    //**************************
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
     appDelegate.chatRoomVCDelegate = self;
@@ -920,7 +924,7 @@
         if ([message objectForKey:@"message"]!=nil) {
             NSDictionary *message=self.messages[indexPath.row];
             NSString * yourText = message[@"message"]; // or however you are getting the text
-            return 51 + [self heightForText:yourText];
+            return 15 + [self heightForText:yourText];
         }else{
             return 180;
         }
@@ -928,7 +932,7 @@
     return 0;
 }
 
-//from jan
+//from jan - not called
 - (void)textViewDidChange:(UITextView *)textView
 {
     CGFloat fixedWidth = textView.frame.size.width;
@@ -941,15 +945,15 @@
 //from jan
 -(CGFloat)heightForText:(NSString *)text
 {
-    NSInteger MAX_HEIGHT = 2000;
+    NSInteger MAX_HEIGHT = 9999;
     UITextView * textView = [[UITextView alloc] initWithFrame: CGRectMake(0, 0, self.tableView.frame.size.width, MAX_HEIGHT)];
     textView.text = text;
-    textView.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
+    textView.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:12];
     [textView sizeToFit];
     return textView.frame.size.height;
 }
 
-//from Jan
+//from Jan - not called
 - (CGFloat)textViewHeightForAttributedText: (NSAttributedString*)text andWidth: (CGFloat)width {
     UITextView *calculationView = [[UITextView alloc] init];
     [calculationView setAttributedText:text];
@@ -962,7 +966,6 @@
     
     NSDictionary *content=self.messages[indexPath.row];
     
-        
         if (content[@"video"])
         {
             MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
@@ -972,7 +975,8 @@
             
 //            UIImage *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
             
-            if ([content[@"user"] isEqualToString:self.user.name]) {
+            if ([content[@"user"] isEqualToString:self.user.name])
+            {
                 KJDChatRoomImageCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellRight"];
                 NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
                 [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
@@ -1087,23 +1091,42 @@
         }
         else if (content[@"message"])
         {
-            NSString *messageTyped=[NSString stringWithFormat:@"\n%@", content[@"message"]];
+            NSString *messageTyped=[NSString stringWithFormat:@"%@", content[@"message"]];
             if ([content[@"user"] isEqualToString:self.user.name])
             {
-                KJDChatRoomTableViewCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"normalCellRight"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:self.user.name];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
                 
-                rightCell.usernameLabel.attributedText = muAtrStr;
-                rightCell.usernameLabel.textAlignment = NSTextAlignmentRight;
-                rightCell.backgroundColor=[UIColor clearColor];
-                rightCell.userMessageTextView.text=messageTyped;
-                rightCell.userMessageTextView.textAlignment=NSTextAlignmentRight;
-                rightCell.userMessageTextView.backgroundColor=[UIColor clearColor];
-                [rightCell.userMessageTextView sizeToFit];
-                [rightCell.userMessageTextView layoutIfNeeded];
+                KJDMessageCell* cell = (KJDMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"messageCell"];
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:self.user.name];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
-                return rightCell;
+                NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
+                [attributedMessage addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0] range:NSMakeRange(0, [attributedMessage length])];
+                
+                if (cell == nil)
+                {
+                    cell = [[KJDMessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"messageCell"];
+                }
+                [cell setUpSenderNameLabel];
+                [cell setUpMessageLabel];
+                cell.senderName.attributedText = attributedUserName;
+                
+                cell.message.attributedText = attributedMessage;
+                
+                return cell;
+//                KJDChatRoomTableViewCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"normalCellRight"];
+//                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:self.user.name];
+//                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+//                
+//                rightCell.usernameLabel.attributedText = muAtrStr;
+//                rightCell.usernameLabel.textAlignment = NSTextAlignmentRight;
+//                rightCell.backgroundColor=[UIColor clearColor];
+//                rightCell.userMessageTextView.text=messageTyped;
+//                rightCell.userMessageTextView.textAlignment=NSTextAlignmentRight;
+//                rightCell.userMessageTextView.backgroundColor=[UIColor clearColor];
+//                [rightCell.userMessageTextView sizeToFit];
+//                [rightCell.userMessageTextView layoutIfNeeded];
+//                
+//                return rightCell;
             }
             else
             {

@@ -32,7 +32,6 @@
    else if ([snapshot.value isKindOfClass:[NSDictionary class]])
    {
       [messagesArray addObject:snapshot.value];
-      NSLog(@"ocurrio");
    }
    else if ([snapshot.value isKindOfClass:[NSString class]])
    {

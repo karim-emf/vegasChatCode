@@ -32,6 +32,7 @@
 		0BFE380A1A1FE1C200EA4D28 /* KJDChatRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BFE38021A1FE1C200EA4D28 /* KJDChatRoomViewController.m */; };
 		0BFE380B1A1FE1C200EA4D28 /* KJDUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BFE38041A1FE1C200EA4D28 /* KJDUser.m */; };
 		0BFE38101A1FE1EB00EA4D28 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BFE380F1A1FE1EB00EA4D28 /* AppDelegate.m */; };
+		8A39385F1A53337900CBB5E1 /* KJDLeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A39385E1A53337900CBB5E1 /* KJDLeftMessageCell.m */; };
 		8A45F5311A373ECC00A69E17 /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A45F5301A373ECC00A69E17 /* images.xcassets */; };
 		8A45F5331A38020900A69E17 /* myLaunchImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A45F5321A38020900A69E17 /* myLaunchImage.png */; };
 		8A45F5351A3829DF00A69E17 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A45F5341A3829DF00A69E17 /* QuickLook.framework */; };
@@ -112,6 +113,8 @@
 		0BFE380F1A1FE1EB00EA4D28 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		41E89D24A220E31E9A949BD9 /* libPods-Vegas.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Vegas.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DCB63D569D4265F5E712AAA /* Pods-Vegas.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Vegas.release.xcconfig"; path = "Pods/Target Support Files/Pods-Vegas/Pods-Vegas.release.xcconfig"; sourceTree = "<group>"; };
+		8A39385D1A53337900CBB5E1 /* KJDLeftMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDLeftMessageCell.h; sourceTree = "<group>"; };
+		8A39385E1A53337900CBB5E1 /* KJDLeftMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDLeftMessageCell.m; sourceTree = "<group>"; };
 		8A45F5301A373ECC00A69E17 /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		8A45F5321A38020900A69E17 /* myLaunchImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myLaunchImage.png; sourceTree = "<group>"; };
 		8A45F5341A3829DF00A69E17 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
@@ -336,6 +339,8 @@
 			children = (
 				8AD8FB181A51F13800187553 /* KJDMessageCell.h */,
 				8AD8FB191A51F13800187553 /* KJDMessageCell.m */,
+				8A39385D1A53337900CBB5E1 /* KJDLeftMessageCell.h */,
+				8A39385E1A53337900CBB5E1 /* KJDLeftMessageCell.m */,
 			);
 			name = karimCells;
 			sourceTree = "<group>";
@@ -546,6 +551,7 @@
 				8A45F55E1A38B31500A69E17 /* KJDChatRoomTableViewCellRight.m in Sources */,
 				0B42BD6F1A1FE80200FCEFE7 /* (null) in Sources */,
 				8A45F5621A38B31500A69E17 /* KJDChatRoomImageCellRight.m in Sources */,
+				8A39385F1A53337900CBB5E1 /* KJDLeftMessageCell.m in Sources */,
 				0BFE380B1A1FE1C200EA4D28 /* KJDUser.m in Sources */,
 				8AD8FB1A1A51F13800187553 /* KJDMessageCell.m in Sources */,
 				0BFE38101A1FE1EB00EA4D28 /* AppDelegate.m in Sources */,

@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import <RNBlurModalView.h> 
 #import "KJDMessageCell.h"
+#import "KJDLeftMessageCell.h"
 
 
 
@@ -919,13 +920,18 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
  
-    if (![self.messages count]==0) {
+    if ([self.messages count] !=0)
+    {
         NSMutableDictionary *message=self.messages[indexPath.row];
-        if ([message objectForKey:@"message"]!=nil) {
+        
+        if ([message objectForKey:@"message"]!=nil)
+        {
             NSDictionary *message=self.messages[indexPath.row];
-            NSString * yourText = message[@"message"]; // or however you are getting the text
-            return 15 + [self heightForText:yourText];
-        }else{
+            NSString * yourText = message[@"message"];
+            return 21 + [self heightForText:yourText];
+        }
+        else
+        {
             return 180;
         }
     }
@@ -946,7 +952,7 @@
 -(CGFloat)heightForText:(NSString *)text
 {
     NSInteger MAX_HEIGHT = 9999;
-    UITextView * textView = [[UITextView alloc] initWithFrame: CGRectMake(0, 0, self.tableView.frame.size.width, MAX_HEIGHT)];
+    UITextView * textView = [[UITextView alloc] initWithFrame: CGRectMake(0, 0, self.tableView.frame.size.width * (5/8.0f), MAX_HEIGHT)];
     textView.text = text;
     textView.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:12];
     [textView sizeToFit];
@@ -954,10 +960,15 @@
 }
 
 //from Jan - not called
-- (CGFloat)textViewHeightForAttributedText: (NSAttributedString*)text andWidth: (CGFloat)width {
-    UITextView *calculationView = [[UITextView alloc] init];
-    [calculationView setAttributedText:text];
-    CGSize size = [calculationView sizeThatFits:CGSizeMake(width, FLT_MAX)];
+- (CGFloat)textViewHeightForAttributedText: (NSAttributedString*)text andWidth: (CGFloat)width
+{
+    UILabel* calculationLabel = [[UILabel alloc]init];
+    [calculationLabel setAttributedText:text];
+    CGSize size = [calculationLabel sizeThatFits:CGSizeMake(width, FLT_MAX)];
+    
+//    UITextView *calculationView = [[UITextView alloc] init];
+//    [calculationView setAttributedText:text];
+//    CGSize size = [calculationView sizeThatFits:CGSizeMake(width, FLT_MAX)];
     return size.height;
 }
 
@@ -1092,10 +1103,11 @@
         else if (content[@"message"])
         {
             NSString *messageTyped=[NSString stringWithFormat:@"%@", content[@"message"]];
+            
             if ([content[@"user"] isEqualToString:self.user.name])
             {
-                
                 KJDMessageCell* cell = (KJDMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"messageCell"];
+                
                 NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:self.user.name];
                 [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
@@ -1109,38 +1121,30 @@
                 [cell setUpSenderNameLabel];
                 [cell setUpMessageLabel];
                 cell.senderName.attributedText = attributedUserName;
-                
                 cell.message.attributedText = attributedMessage;
                 
                 return cell;
-//                KJDChatRoomTableViewCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"normalCellRight"];
-//                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:self.user.name];
-//                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
-//                
-//                rightCell.usernameLabel.attributedText = muAtrStr;
-//                rightCell.usernameLabel.textAlignment = NSTextAlignmentRight;
-//                rightCell.backgroundColor=[UIColor clearColor];
-//                rightCell.userMessageTextView.text=messageTyped;
-//                rightCell.userMessageTextView.textAlignment=NSTextAlignmentRight;
-//                rightCell.userMessageTextView.backgroundColor=[UIColor clearColor];
-//                [rightCell.userMessageTextView sizeToFit];
-//                [rightCell.userMessageTextView layoutIfNeeded];
-//                
-//                return rightCell;
             }
             else
             {
-                KJDChatRoomTableViewCellLeft *leftCell=[tableView dequeueReusableCellWithIdentifier:@"normalCellLeft"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
-                leftCell.backgroundColor=[UIColor clearColor];
-                leftCell.usernameLabel.attributedText=muAtrStr;
-                leftCell.userMessageTextView.text=messageTyped;
-                leftCell.userMessageTextView.backgroundColor=[UIColor clearColor];
-                [leftCell.userMessageTextView sizeToFit];
-                [leftCell.userMessageTextView layoutIfNeeded];
+                KJDLeftMessageCell* cell = (KJDLeftMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMessageCell"];
                 
-                return leftCell;
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:self.user.name];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+                
+                NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
+                [attributedMessage addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0] range:NSMakeRange(0, [attributedMessage length])];
+                
+                if (cell == nil)
+                {
+                    cell = [[KJDLeftMessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMessageCell"];
+                }
+                [cell setUpSenderNameLabel];
+                [cell setUpMessageLabel];
+                cell.senderName.attributedText = attributedUserName;
+                cell.message.attributedText = attributedMessage;
+                
+                return cell;
             }
         }
     return nil;

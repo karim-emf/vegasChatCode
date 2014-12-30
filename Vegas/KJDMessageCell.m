@@ -25,11 +25,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self)
     {
-        self.backgroundColor = [UIColor blueColor];
+        self.backgroundColor = [UIColor clearColor];
         
         self.senderName = [[UILabel alloc] init];
         self.senderName.textColor = [UIColor blackColor];
-        self.senderName.backgroundColor = [UIColor redColor];
+        self.senderName.backgroundColor = [UIColor clearColor];
         self.senderName.textAlignment = NSTextAlignmentRight;
         [self addSubview:self.senderName];
         
@@ -37,26 +37,21 @@
         self.message.textColor = [UIColor blackColor];
         self.message.numberOfLines = 0;
         [self.message sizeToFit];
-        self.message.backgroundColor = [UIColor yellowColor];
+        self.message.backgroundColor = [UIColor clearColor];
         self.message.textAlignment = NSTextAlignmentRight;
         
-        CGSize constrainedSize = CGSizeMake(self.message.frame.size.width  , 9999);
+//        CGSize constrainedSize = CGSizeMake(self.message.frame.size.width  , 9999);
+//        
         
-//        NSDictionary *attributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-//                                              [UIFont fontWithName:@"HelveticaNeue" size:12.0], NSFontAttributeName,
-//                                              nil];
-        
-//        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:@"textToShow" attributes:attributesDictionary];
-        
-        CGRect requiredHeight = [self.message.attributedText boundingRectWithSize:constrainedSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
-        
-        if (requiredHeight.size.width > self.message.frame.size.width)
-        {
-            requiredHeight = CGRectMake(0,0, self.message.frame.size.width, requiredHeight.size.height);
-        }
-        CGRect newFrame = self.message.frame;
-        newFrame.size.height = requiredHeight.size.height;
-        self.message.frame = newFrame;
+//        CGRect requiredHeight = [self.message.attributedText boundingRectWithSize:constrainedSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
+//        
+//        if (requiredHeight.size.width > self.message.frame.size.width)
+//        {
+//            requiredHeight = CGRectMake(0,0, self.message.frame.size.width, requiredHeight.size.height);
+//        }
+//        CGRect newFrame = self.message.frame;
+//        newFrame.size.height = requiredHeight.size.height;
+//        self.message.frame = newFrame;
         
         [self addSubview:self.message];
         
@@ -125,7 +120,7 @@
                                                                       toItem:self
                                                                    attribute:NSLayoutAttributeBottom
                                                                   multiplier:1.0
-                                                                    constant:-4.0];
+                                                                    constant:-12.0];
     
     NSLayoutConstraint *messageWidth = [NSLayoutConstraint constraintWithItem:self.message
                                                                  attribute:NSLayoutAttributeWidth

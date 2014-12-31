@@ -174,8 +174,10 @@
         NSString* oldName= self.user.name;
         NSString* newName = self.usernameTextField.text;
         
-         [self.chatRoom.nameSwitchFireBase setValue:@{@"newName":newName,
-                                                      @"oldName":oldName}];
+        [self.chatRoom.nameSwitchFireBase setValue:@{@"newName":newName,@"oldName":oldName} withCompletionBlock:^(NSError *error, Firebase *ref)
+        {
+            [self.tableView reloadData];
+        }];
         
         [UIView transitionWithView:self.usernameView
                           duration:0.4
@@ -186,7 +188,6 @@
                         completion:nil];
         
         [self dismissKeyboard];
-        [self.tableView reloadData];
     }
     else
     {
@@ -939,6 +940,11 @@
                 UIImage* picture = [self stringToUIImage:message[@"image"]];
                 return [self cellHeightForImage:picture] + 21;
             }
+            else if (message[@"map"])
+            {
+                UIImage* picture = [self stringToUIImage:message[@"map"]];
+                return [self cellHeightForImage:picture] + 21;
+            }
         }
     }
     return 0;
@@ -1059,27 +1065,41 @@
             
             if ([content[@"user"] isEqualToString:self.user.name])
             {
-                KJDChatRoomImageCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellRight"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+                KJDRightMediaCell* cell = (KJDRightMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"rightMediaCell"];
                 
-                rightCell.usernameLabel.attributedText=muAtrStr;
-                rightCell.backgroundColor=[UIColor clearColor];
-                rightCell.mediaImageView.image=imageToDisplay;
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
-                return rightCell;
+                if (cell == nil)
+                {
+                    cell = [[KJDRightMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightMediaCell"];
+                }
+                [cell setUpSenderNameLabel];
+                [cell setUpMediaView];
+                cell.media.contentMode = UIViewContentModeScaleAspectFit;
+                cell.media.image = imageToDisplay;
+                cell.senderName.attributedText = attributedUserName;
+                
+                return cell;
             }
             else
             {
-                KJDChatRoomImageCellLeft *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+                KJDLeftMediaCell* cell = (KJDLeftMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMediaCell"];
                 
-                leftCell.usernameLabel.attributedText=muAtrStr;
-                leftCell.backgroundColor=[UIColor clearColor];
-                leftCell.mediaImageView.image=imageToDisplay;
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
-                return leftCell;
+                if (cell == nil)
+                {
+                    cell = [[KJDLeftMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMediaCell"];
+                }
+                [cell setUpSenderNameLabel];
+                [cell setUpMediaView];
+                cell.media.contentMode = UIViewContentModeScaleAspectFit;
+                cell.media.image = imageToDisplay;
+                cell.senderName.attributedText = attributedUserName;
+                
+                return cell;
             }
         }
         else if (content[@"image"])
@@ -1125,16 +1145,6 @@
                 cell.senderName.attributedText = attributedUserName;
                 
                 return cell;
-//                
-//                KJDChatRoomImageCellRight *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
-//                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-//                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
-//                
-//                leftCell.usernameLabel.attributedText=muAtrStr;
-//                leftCell.backgroundColor=[UIColor clearColor];
-//                leftCell.mediaImageView.image=imageToDisplay;
-//                
-//                return leftCell;
            }
         }
         else if (content[@"message"])
@@ -1189,9 +1199,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
     NSDictionary *content=self.messages[indexPath.row];
     
     if (content[@"map"])
@@ -1199,8 +1207,8 @@
         UITableViewCell* mapCell = [self.tableView cellForRowAtIndexPath:indexPath];
         KJDImageDisplayViewController* imageDisplayVC = [[KJDImageDisplayViewController alloc]init];
         
-        imageDisplayVC.map = mapCell.contentView.subviews[0];//((KJDChatRoomImageCellLeft *)mapCell).mediaImageView;
-        
+        //in future might cause trouble bc we use leftCell for both right and left scenario.
+        imageDisplayVC.mapImage = ((KJDLeftMediaCell*)mapCell).media.image;
         [imageDisplayVC setModalPresentationStyle:UIModalPresentationFullScreen];
         
         [self presentViewController:imageDisplayVC animated:YES completion:^

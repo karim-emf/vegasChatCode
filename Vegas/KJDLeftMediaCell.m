@@ -120,7 +120,24 @@
                                                                  multiplier:1.0
                                                                    constant:0.0];
     
+//    NSLayoutConstraint *mediaWidth = [NSLayoutConstraint constraintWithItem:self.media
+//                                                                  attribute:NSLayoutAttributeWidth
+//                                                                  relatedBy:NSLayoutRelationEqual
+//                                                                     toItem:self
+//                                                                  attribute:NSLayoutAttributeWidth
+//                                                                 multiplier:5/8.0f
+//                                                                   constant:4.0];
+//    
+//    NSLayoutConstraint *mediaLeft = [NSLayoutConstraint constraintWithItem:self.media
+//                                                                 attribute:NSLayoutAttributeLeft
+//                                                                 relatedBy:NSLayoutRelationEqual
+//                                                                    toItem:self
+//                                                                 attribute:NSLayoutAttributeLeft
+//                                                                multiplier:1.0
+//                                                                  constant:4.0];
+    
     [self addConstraints:@[mediaTop, mediaBottom, mediaWidth, mediaRight]];
+//    [self addConstraints:@[mediaTop, mediaBottom, mediaWidth, mediaLeft]];
 }
 
 @end

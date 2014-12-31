@@ -11,5 +11,5 @@
 @interface KJDImageDisplayViewController : UIViewController
 
 @property (strong, nonatomic) UIImageView* map;
-
+@property (strong, nonatomic) UIImage* mapImage;
 @end

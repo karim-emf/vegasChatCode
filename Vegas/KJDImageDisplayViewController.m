@@ -21,6 +21,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
+    backgroundImage.frame=self.view.frame;
+    [self.view addSubview:backgroundImage];
+    [self.view sendSubviewToBack:backgroundImage];
+    
     [self setUpDisplay];
     [self setUpDoneButton];
     // Do any additional setup after loading the view.
@@ -33,10 +38,10 @@
 
 -(void) setUpDisplay
 {
-    UIImageView* mapView =self.map; //initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height)];
+    self.map = [[UIImageView alloc]initWithImage:self.mapImage];
 
     [self.view addSubview:self.map];
-    mapView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.map.translatesAutoresizingMaskIntoConstraints = NO;
     
     NSLayoutConstraint *mapViewTop = [NSLayoutConstraint constraintWithItem:self.map
                                                                   attribute:NSLayoutAttributeTop

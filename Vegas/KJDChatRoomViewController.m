@@ -12,6 +12,8 @@
 #import <RNBlurModalView.h> 
 #import "KJDMessageCell.h"
 #import "KJDLeftMessageCell.h"
+#import "KJDRightMediaCell.h"
+#import "KJDLeftMediaCell.h"
 
 
 
@@ -932,10 +934,21 @@
         }
         else
         {
-            return 180;
+            if (message[@"image"])
+            {
+                UIImage* picture = [self stringToUIImage:message[@"image"]];
+                return [self cellHeightForImage:picture] + 21;
+            }
         }
     }
     return 0;
+}
+
+-(CGFloat) cellHeightForImage:(UIImage*)picture
+{
+    CGFloat ratio = picture.size.height/picture.size.width;
+    CGFloat cellHeight = ratio * self.tableView.frame.size.width * (5/8.0f);
+    return cellHeight;
 }
 
 //from jan - not called
@@ -1077,27 +1090,51 @@
             
             if ([content[@"user"] isEqualToString:self.user.name])
             {
-                KJDChatRoomImageCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellRight"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+                KJDRightMediaCell* cell = (KJDRightMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"rightMediaCell"];
                 
-                rightCell.usernameLabel.attributedText=muAtrStr;
-                rightCell.backgroundColor=[UIColor clearColor];
-                rightCell.mediaImageView.image=imageToDisplay;
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
-                return rightCell;
+                if (cell == nil)
+                {
+                    cell = [[KJDRightMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightMediaCell"];
+                }
+                [cell setUpSenderNameLabel];
+                [cell setUpMediaView];
+                cell.media.contentMode = UIViewContentModeScaleAspectFit;
+                cell.media.image = imageToDisplay;
+                cell.senderName.attributedText = attributedUserName;
+                
+                return cell;
             }
             else
             {
-                KJDChatRoomImageCellRight *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+                KJDLeftMediaCell* cell = (KJDLeftMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMediaCell"];
                 
-                leftCell.usernameLabel.attributedText=muAtrStr;
-                leftCell.backgroundColor=[UIColor clearColor];
-                leftCell.mediaImageView.image=imageToDisplay;
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
-                return leftCell;
+                if (cell == nil)
+                {
+                    cell = [[KJDLeftMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMediaCell"];
+                }
+                [cell setUpSenderNameLabel];
+                [cell setUpMediaView];
+                cell.media.contentMode = UIViewContentModeScaleAspectFit;
+                cell.media.image = imageToDisplay;
+                cell.senderName.attributedText = attributedUserName;
+                
+                return cell;
+//                
+//                KJDChatRoomImageCellRight *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
+//                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+//                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+//                
+//                leftCell.usernameLabel.attributedText=muAtrStr;
+//                leftCell.backgroundColor=[UIColor clearColor];
+//                leftCell.mediaImageView.image=imageToDisplay;
+//                
+//                return leftCell;
            }
         }
         else if (content[@"message"])
@@ -1108,7 +1145,7 @@
             {
                 KJDMessageCell* cell = (KJDMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"messageCell"];
                 
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:self.user.name];
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
                 [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
                 NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
@@ -1129,7 +1166,7 @@
             {
                 KJDLeftMessageCell* cell = (KJDLeftMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMessageCell"];
                 
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:self.user.name];
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
                 [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
                 NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];

@@ -28,6 +28,7 @@
 @property (strong, nonatomic) UIBarButtonItem *settingsButton;
 
 @property (strong,nonatomic) MPMoviePlayerController* playerController;
+@property (strong,nonatomic) NSMutableArray* videos;
 
 //jan
 @property (strong, nonatomic) UIView *usernameView;
@@ -923,7 +924,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
- 
+ //height in points
     if ([self.messages count] !=0)
     {
         NSMutableDictionary *message=self.messages[indexPath.row];
@@ -948,7 +949,7 @@
             }
             else if (message[@"video"])
             {
-                return (self.tableView.frame.size.height *5/8.0f) + 21;
+                return (self.tableView.frame.size.width *5/8.0f -4) + 21;
             }
         }
     }
@@ -1005,9 +1006,9 @@
         {
             MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
             //out for need of prev understanding!
-//            [player prepareToPlay];
+            [player prepareToPlay];
 //            player.allowsAirPlay = YES;
-            player.scalingMode = MPMovieScalingModeAspectFit;
+
             self.playerController = player;
 //            player.shouldAutoplay = NO;
             
@@ -1029,19 +1030,20 @@
                 cell.videoView.contentMode = UIViewContentModeScaleAspectFit;
                 cell.senderName.attributedText = attributedUserName;
                 
-                cell.videoView.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f);
-                player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f);
+                player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f-4);
                 player.scalingMode = MPMovieScalingModeAspectFit;
                //
 //                [cell.videoView setNeedsDisplay];
 //                cell.videoView.contentMode = UIViewContentModeRedraw;
-//                cell.videoView.transform = 
+//                cell.videoView.transform =
 
-//                player.view.frame = cell.videoView.frame;
-                NSLog(@"cell video view frame: %f, %f, %f, %f", cell.videoView.frame.origin.x, cell.videoView.frame.origin.y, cell.videoView.frame.size.width, cell.videoView.frame.size.height);
-                NSLog(@"player view frame: %f, %f, %f, %f", player.view.frame.origin.x, player.view.frame.origin.y, player.view.frame.size.width, player.view.frame.size.height);
-                
-                [cell.videoView addSubview:player.view];
+
+                if ([cell.videoView.subviews count] == 0)
+                {
+                    [cell.videoView addSubview:player.view];
+                    [self.videos addObject:player];
+                }
+
 
                 //must understand first
 
@@ -1049,10 +1051,6 @@
 //                player.repeatMode = MPMovieRepeatModeNone;
 //                [player play];
                 
-//                if ([cell.contentView.subviews count] == 1)
-//                {
-//                    [cell.contentView addSubview:player.view];
-//                }
                 
                 return cell;
             }

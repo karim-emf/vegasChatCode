@@ -28,6 +28,11 @@
 {
     [super viewDidLoad];
     
+    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
+    backgroundImage.frame=self.view.frame;
+    [self.view addSubview:backgroundImage];
+    [self.view sendSubviewToBack:backgroundImage];
+    
     self.mapView.showsUserLocation = YES;
     
     self.locationManager = [[CLLocationManager alloc] init];

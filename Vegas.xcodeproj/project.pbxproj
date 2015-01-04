@@ -53,6 +53,7 @@
 		8A45F5601A38B31500A69E17 /* KJDChatRoomImageCellLeft.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45F5571A38B31500A69E17 /* KJDChatRoomImageCellLeft.m */; };
 		8A45F5611A38B31500A69E17 /* KJDChatRoomImageCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A45F5581A38B31500A69E17 /* KJDChatRoomImageCellRight.xib */; };
 		8A45F5621A38B31500A69E17 /* KJDChatRoomImageCellRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45F55A1A38B31500A69E17 /* KJDChatRoomImageCellRight.m */; };
+		8AD5155F1A58CEB400844DAF /* KJDRightVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5155E1A58CEB400844DAF /* KJDRightVideoCell.m */; };
 		8AD8FB0C1A4C96ED00187553 /* games-abstract-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB0B1A4C96ED00187553 /* games-abstract-7.png */; };
 		8AD8FB0E1A4C96F900187553 /* gear-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB0D1A4C96F900187553 /* gear-7.png */; };
 		8AD8FB101A4C972400187553 /* paper-plane-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB0F1A4C972400187553 /* paper-plane-7.png */; };
@@ -147,6 +148,8 @@
 		8A45F5581A38B31500A69E17 /* KJDChatRoomImageCellRight.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KJDChatRoomImageCellRight.xib; sourceTree = "<group>"; };
 		8A45F5591A38B31500A69E17 /* KJDChatRoomImageCellRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDChatRoomImageCellRight.h; sourceTree = "<group>"; };
 		8A45F55A1A38B31500A69E17 /* KJDChatRoomImageCellRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDChatRoomImageCellRight.m; sourceTree = "<group>"; };
+		8AD5155D1A58CEB400844DAF /* KJDRightVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDRightVideoCell.h; sourceTree = "<group>"; };
+		8AD5155E1A58CEB400844DAF /* KJDRightVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDRightVideoCell.m; sourceTree = "<group>"; };
 		8AD8FB0B1A4C96ED00187553 /* games-abstract-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "games-abstract-7.png"; sourceTree = "<group>"; };
 		8AD8FB0D1A4C96F900187553 /* gear-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gear-7.png"; sourceTree = "<group>"; };
 		8AD8FB0F1A4C972400187553 /* paper-plane-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "paper-plane-7.png"; sourceTree = "<group>"; };
@@ -351,6 +354,8 @@
 				8A3938611A53AA1700CBB5E1 /* KJDRightMediaCell.m */,
 				8A3938631A53B7DA00CBB5E1 /* KJDLeftMediaCell.h */,
 				8A3938641A53B7DA00CBB5E1 /* KJDLeftMediaCell.m */,
+				8AD5155D1A58CEB400844DAF /* KJDRightVideoCell.h */,
+				8AD5155E1A58CEB400844DAF /* KJDRightVideoCell.m */,
 			);
 			name = karimCells;
 			sourceTree = "<group>";
@@ -572,6 +577,7 @@
 				8A45F5381A382BAF00A69E17 /* KJDImageDisplayViewController.m in Sources */,
 				8A45F54B1A389FC500A69E17 /* KJDMessageCellRight.m in Sources */,
 				B19C3A341A1FE748002868B1 /* main.m in Sources */,
+				8AD5155F1A58CEB400844DAF /* KJDRightVideoCell.m in Sources */,
 				8A45F5601A38B31500A69E17 /* KJDChatRoomImageCellLeft.m in Sources */,
 				B19C3A371A1FE79E002868B1 /* KJDLoginViewController.m in Sources */,
 				8A45F5461A389FA400A69E17 /* KJDMediaCellRight.m in Sources */,

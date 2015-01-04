@@ -28,12 +28,10 @@
     
     [self setUpDisplay];
     [self setUpDoneButton];
-    // Do any additional setup after loading the view.
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(void) setUpDisplay
@@ -132,15 +130,13 @@
 {
     self.doneButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
     self.doneButton.titleLabel.textColor=[UIColor whiteColor];
-    [self dismissViewControllerAnimated:YES completion:^
-    {
+    [self dismissViewControllerAnimated:YES completion:^{
     }];
 }
 
 -(UIImage *)stringToUIImage:(NSString *)string
 {
     NSData *data = [[NSData alloc]initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    
     return [UIImage imageWithData:data];
 }
 
@@ -148,15 +144,5 @@
 {
     self.doneButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

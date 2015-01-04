@@ -14,6 +14,7 @@
 #import "KJDLeftMessageCell.h"
 #import "KJDRightMediaCell.h"
 #import "KJDLeftMediaCell.h"
+#import "KJDRightVideoCell.h"
 
 
 
@@ -945,6 +946,10 @@
                 UIImage* picture = [self stringToUIImage:message[@"map"]];
                 return [self cellHeightForImage:picture] + 21;
             }
+            else if (message[@"video"])
+            {
+                return (self.tableView.frame.size.height *5/8.0f) + 21;
+            }
         }
     }
     return 0;
@@ -999,37 +1004,57 @@
         if (content[@"video"])
         {
             MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
-            
+            //out for need of prev understanding!
+//            [player prepareToPlay];
+//            player.allowsAirPlay = YES;
+            player.scalingMode = MPMovieScalingModeAspectFit;
             self.playerController = player;
-            player.shouldAutoplay = NO;
+//            player.shouldAutoplay = NO;
             
 //            UIImage *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
             
             if ([content[@"user"] isEqualToString:self.user.name])
             {
-                KJDChatRoomImageCellRight *rightCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellRight"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+                KJDRightVideoCell* cell = (KJDRightVideoCell*)[tableView dequeueReusableCellWithIdentifier:@"rightVideoCell"];
                 
-                rightCell.usernameLabel.attributedText=muAtrStr;
-                rightCell.backgroundColor=[UIColor clearColor];
-                [rightCell.mediaImageView setBackgroundColor:[UIColor clearColor]];
+                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
-                [rightCell.mediaImageView removeFromSuperview];
-                
-                player.view.frame = CGRectMake(170, 30, 141, 142);
-                
-                player.scalingMode = MPMovieScalingModeAspectFit;
-                [player setControlStyle:MPMovieControlStyleDefault];
-                player.repeatMode = MPMovieRepeatModeNone;
-                [player play];
-                
-                if ([rightCell.contentView.subviews count] == 1)
+                if (cell == nil)
                 {
-                    [rightCell.contentView addSubview:player.view];
+                    cell = [[KJDRightVideoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightVideoCell"];
                 }
+                [cell setUpSenderNameLabel];
+                [cell setUpVideoView];
+                cell.videoView.contentMode = UIViewContentModeScaleAspectFit;
+                cell.senderName.attributedText = attributedUserName;
                 
-                return rightCell;
+                cell.videoView.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f);
+                player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f);
+                player.scalingMode = MPMovieScalingModeAspectFit;
+               //
+//                [cell.videoView setNeedsDisplay];
+//                cell.videoView.contentMode = UIViewContentModeRedraw;
+//                cell.videoView.transform = 
+
+//                player.view.frame = cell.videoView.frame;
+                NSLog(@"cell video view frame: %f, %f, %f, %f", cell.videoView.frame.origin.x, cell.videoView.frame.origin.y, cell.videoView.frame.size.width, cell.videoView.frame.size.height);
+                NSLog(@"player view frame: %f, %f, %f, %f", player.view.frame.origin.x, player.view.frame.origin.y, player.view.frame.size.width, player.view.frame.size.height);
+                
+                [cell.videoView addSubview:player.view];
+
+                //must understand first
+
+//                [player setControlStyle:MPMovieControlStyleDefault];
+//                player.repeatMode = MPMovieRepeatModeNone;
+//                [player play];
+                
+//                if ([cell.contentView.subviews count] == 1)
+//                {
+//                    [cell.contentView addSubview:player.view];
+//                }
+                
+                return cell;
             }
             else
             {

@@ -7,13 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface KJDRightVideoCell : UITableViewCell
 
 @property (nonatomic, strong) UILabel* senderName;
 @property (nonatomic, strong) UIView* videoView;
+@property (nonatomic, strong) MPMoviePlayerController* player;
 
--(void) setUpSenderNameLabel;
+-(void) setUpSenderNameLabelWithBlock:(void (^)())completionBlock;
 -(void) setUpVideoView;
+
+//-(void)tieVideo:(MPMoviePlayerController*)player;
 
 @end

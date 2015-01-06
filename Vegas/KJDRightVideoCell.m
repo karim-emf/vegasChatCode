@@ -20,6 +20,7 @@
     // Configure the view for the selected state
 }
 
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -32,16 +33,22 @@
         self.senderName.backgroundColor = [UIColor clearColor];
         self.senderName.textAlignment = NSTextAlignmentRight;
         [self addSubview:self.senderName];
+
+//        self.player = [[MPMoviePlayerController alloc]init];
+//        [self.player.view sizeToFit];
+//        self.player.view.frame = CGRectMake(50, 20, 180, 180);
+//        [self.player prepareToPlay];
         
         self.videoView = [[UIView alloc] init];
         [self.videoView sizeToFit];
         self.videoView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.videoView];
+//        [self addSubview:self.player.view];
     }
     return self;
 }
 
--(void) setUpSenderNameLabel
+-(void) setUpSenderNameLabelWithBlock:(void (^)())completionBlock
 {
     
     self.senderName.translatesAutoresizingMaskIntoConstraints = NO;
@@ -98,11 +105,11 @@
     
     NSLayoutConstraint *videoViewBottom = [NSLayoutConstraint constraintWithItem:self.videoView
                                                                    attribute:NSLayoutAttributeBottom
-                                                                   relatedBy:NSLayoutRelationEqual
+                                                                   relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                                       toItem:self
                                                                    attribute:NSLayoutAttributeBottom
                                                                   multiplier:1.0
-                                                                    constant:-12.0];
+                                                                    constant:-4.0];
     
     NSLayoutConstraint *videoViewWidth = [NSLayoutConstraint constraintWithItem:self.videoView
                                                                   attribute:NSLayoutAttributeWidth
@@ -122,7 +129,6 @@
     
     [self addConstraints:@[videoViewTop, videoViewBottom, videoViewWidth, videoViewRight]];
     
-    [self.videoView sizeToFit];
 }
 
 @end

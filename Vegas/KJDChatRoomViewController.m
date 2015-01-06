@@ -58,6 +58,8 @@
     [self.view addSubview:backgroundImage];
     [self.view sendSubviewToBack:backgroundImage];
     
+    self.videos = [NSMutableArray new];
+    
     //**************************
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -795,15 +797,13 @@
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/vid1.mp4"];
+    NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%lu.mp4", (unsigned long)[self.videos count]];
     
     BOOL success = [videoData writeToFile:tempPath atomically:NO];
     
     NSURL* pathURL = [[NSURL alloc] initFileURLWithPath:tempPath];
     
     MPMoviePlayerController* player = [[MPMoviePlayerController alloc]initWithContentURL:pathURL];
-    
-    player.shouldAutoplay = NO;
     
     return player;
 }
@@ -997,6 +997,14 @@
     return size.height;
 }
 
+-(void)moviePlayBackDidFinish:(NSNotification*)notification
+{
+    MPMoviePlayerController *videoplayer = [notification object];
+
+    NSLog(@"occured");
+    [videoplayer prepareToPlay];
+    
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -1005,19 +1013,30 @@
         if (content[@"video"])
         {
             MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
-            //out for need of prev understanding!
-            [player prepareToPlay];
-//            player.allowsAirPlay = YES;
-
-            self.playerController = player;
-//            player.shouldAutoplay = NO;
             
-//            UIImage *thumbnail = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(thumbnailImageRetrieved) name:@"MPMoviePlayerThumbnailImageRequestDidFinishNotification" object:player];
+//            [player requestThumbnailImagesAtTimes:@[@1.0f] timeOption:MPMovieTimeOptionNearestKeyFrame];
+            
+            UIImage* thumbnail = [player thumbnailImageAtTime:1.0f timeOption:MPMovieTimeOptionNearestKeyFrame];
+            UIImageView *thumbnailView = [[UIImageView alloc] initWithImage:thumbnail];
+            [player prepareToPlay];
+            player.allowsAirPlay = YES;
+            player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f-8);
+            thumbnailView.frame = player.view.frame;
+            [player.view addSubview:thumbnailView];
+//            player.fullscreen = YES;
+            player.scalingMode = MPMovieScalingModeAspectFit;
+            player.shouldAutoplay = YES;
+            
+//            [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                     selector:@selector(moviePlayBackDidFinish:)
+//                                                         name:MPMoviePlayerPlaybackDidFinishNotification
+//                                                       object:player];
             
             if ([content[@"user"] isEqualToString:self.user.name])
             {
                 KJDRightVideoCell* cell = (KJDRightVideoCell*)[tableView dequeueReusableCellWithIdentifier:@"rightVideoCell"];
-                
+//                [cell tieVideo:player];
                 NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
                 [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
                 
@@ -1025,33 +1044,32 @@
                 {
                     cell = [[KJDRightVideoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightVideoCell"];
                 }
-                [cell setUpSenderNameLabel];
+
+                __weak KJDRightVideoCell* weakCell = cell;
+                
+                [cell setUpSenderNameLabelWithBlock:^{
+//                    [weakCell setUpVideoView];
+                }];
                 [cell setUpVideoView];
+//                cell.player = player;
+//                [cell.player prepareToPlay];
+//                cell.player.scalingMode = MPMovieScalingModeAspectFit;
+                
                 cell.videoView.contentMode = UIViewContentModeScaleAspectFit;
                 cell.senderName.attributedText = attributedUserName;
-                
-                player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f-4);
-                player.scalingMode = MPMovieScalingModeAspectFit;
-               //
-//                [cell.videoView setNeedsDisplay];
-//                cell.videoView.contentMode = UIViewContentModeRedraw;
-//                cell.videoView.transform =
-
-
+                cell.videoView.backgroundColor = [UIColor yellowColor];
                 if ([cell.videoView.subviews count] == 0)
                 {
+//                    cell.videoView = player.view;
                     [cell.videoView addSubview:player.view];
-                    [self.videos addObject:player];
+                    
+                    NSDate * now = [NSDate date];
+                    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+                    [outputFormatter setDateFormat:@"HH:mm:ss"];
+                    NSString *newDateString = [outputFormatter stringFromDate:now];
+                    [self.videos addObject:newDateString];
                 }
-
-
-                //must understand first
-
-//                [player setControlStyle:MPMovieControlStyleDefault];
-//                player.repeatMode = MPMovieRepeatModeNone;
-//                [player play];
-                
-                
+                [player play];
                 return cell;
             }
             else

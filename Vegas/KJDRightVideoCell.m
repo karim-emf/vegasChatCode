@@ -19,7 +19,20 @@
 
     // Configure the view for the selected state
 }
-
+-(void)tieVideo:(MPMoviePlayerController*)player
+{
+    self.player = player;
+//    self.player = [[MPMoviePlayerController alloc]init];
+//    [self.player.view sizeToFit];
+    self.player.view.frame = CGRectMake(50, 20, 180, 180);
+//    [self.player prepareToPlay];
+    [self addSubview:self.player.view];
+    
+    if ([self.subviews count] == 0)
+    {
+        [self addSubview:self.player.view];
+    }
+}
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -33,22 +46,16 @@
         self.senderName.backgroundColor = [UIColor clearColor];
         self.senderName.textAlignment = NSTextAlignmentRight;
         [self addSubview:self.senderName];
-
-//        self.player = [[MPMoviePlayerController alloc]init];
-//        [self.player.view sizeToFit];
-//        self.player.view.frame = CGRectMake(50, 20, 180, 180);
-//        [self.player prepareToPlay];
-        
+       
         self.videoView = [[UIView alloc] init];
         [self.videoView sizeToFit];
         self.videoView.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:self.videoView];
-//        [self addSubview:self.player.view];
+        [self addSubview:self.videoView];
     }
     return self;
 }
 
--(void) setUpSenderNameLabelWithBlock:(void (^)())completionBlock
+-(void) setUpSenderNameLabel
 {
     
     self.senderName.translatesAutoresizingMaskIntoConstraints = NO;

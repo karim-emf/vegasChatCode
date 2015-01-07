@@ -15,9 +15,10 @@
 @property (nonatomic, strong) UIView* videoView;
 @property (nonatomic, strong) MPMoviePlayerController* player;
 
--(void) setUpSenderNameLabelWithBlock:(void (^)())completionBlock;
+//-(void) setUpSenderNameLabelWithBlock:(void (^)())completionBlock;
+-(void) setUpSenderNameLabel;
 -(void) setUpVideoView;
 
-//-(void)tieVideo:(MPMoviePlayerController*)player;
+-(void)tieVideo:(MPMoviePlayerController*)player;
 
 @end

@@ -15,6 +15,8 @@
 #import "KJDRightMediaCell.h"
 #import "KJDLeftMediaCell.h"
 #import "KJDRightVideoCell.h"
+#import "KJDVideoDisplayer.h"
+
 
 
 
@@ -27,8 +29,9 @@
 @property (strong, nonatomic) UILabel *subtitleView;
 @property (strong, nonatomic) UIBarButtonItem *settingsButton;
 
-@property (strong,nonatomic) MPMoviePlayerController* playerController;
-@property (strong,nonatomic) NSMutableArray* videos;
+@property (strong, nonatomic) MPMoviePlayerController* playerController;
+@property (strong, nonatomic) NSMutableArray* videos;
+@property (strong, nonatomic) UIImage* thumbnail;
 
 //jan
 @property (strong, nonatomic) UIView *usernameView;
@@ -123,6 +126,7 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(thumbnailImageRetrieved:) name:MPMoviePlayerThumbnailImageRequestDidFinishNotification object:nil];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissKeyboard)];
@@ -415,28 +419,13 @@
     }
 }
 
-//-(void)setViewMovedUp:(BOOL)moveUp{
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.3];
-//    CGRect superViewRect = self.view.frame;
-//    UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-//    UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+20, 0, 0, 0);
-//    if (moveUp){
-//        self.tableView.contentInset = inset;
-//        superViewRect.origin.y -= self.keyBoardFrame.size.height;
-//    }else{
-//        self.tableView.contentInset = afterInset;
-//        superViewRect.origin.y += self.keyBoardFrame.size.height;
-//    }
-//    self.view.frame = superViewRect;
-//    [UIView commitAnimations];
-//}
-
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
 }
 
-- (void)setupViewsAndConstraints {
+- (void)setupViewsAndConstraints
+{
     [self setupNavigationBar];
     [self setupTableView];
     [self setupTextField];
@@ -446,11 +435,8 @@
     [self setupUsernameView];
 }
 
--(void)setupNavigationBar{
-//    self.navigationItem.title=self.chatRoom.firebaseRoomURL;
-    
-
-
+-(void)setupNavigationBar
+{
     [self.navigationController.navigationBar setBackgroundImage:[UIImage new]
                              forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
@@ -472,8 +458,6 @@
     titleView.font = [UIFont boldSystemFontOfSize:20];
     titleView.textAlignment = UITextAlignmentCenter;
     titleView.textColor = [UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1.0];
-//    titleView.shadowColor = [UIColor darkGrayColor];
-//    titleView.shadowOffset = CGSizeMake(0, -1);
     titleView.text = self.chatRoom.firebaseRoomURL;
     titleView.adjustsFontSizeToFitWidth = YES;
     [headerTitleSubtitleView addSubview:titleView];
@@ -541,7 +525,6 @@
     self.tableView.dataSource = self;
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.backgroundColor = [UIColor clearColor];
-//    self.tableView.backgroundView=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"background"]];
     [self.view sendSubviewToBack:self.tableView.backgroundView];
     self.tableView.clipsToBounds=YES;
     
@@ -591,7 +574,8 @@
     
 }
 
-- (void)sendButtonTapped{
+- (void)sendButtonTapped
+{
     self.sendButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
 
 }
@@ -612,7 +596,8 @@
     self.sendButton.titleLabel.textColor=[UIColor whiteColor];
 }
 
-- (void)setupSendButton{
+- (void)setupSendButton
+{
     self.sendButton = [[UIButton alloc] init];
     [self.view addSubview:self.sendButton];
     self.sendButton.backgroundColor=[UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1];
@@ -661,14 +646,13 @@
     [self.view addConstraints:@[sendButtonTop, sendButtonBottom, sendButtonLeft, sendButtonRight]];
 }
 
--(void)setupMediaButton{
+-(void)setupMediaButton
+{
     self.mediaButton = [[UIButton alloc] init];
     [self.view addSubview:self.mediaButton];
     self.mediaButton.backgroundColor = [UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1];
     [self.mediaButton setImage:[UIImage imageNamed:@"photo-abstract-7"] forState:UIControlStateNormal];
-//    [self.mediaButton setAttributedTitle :[[NSAttributedString alloc] initWithString:@"M"
-//                                                                          attributes:nil]
-//                                 forState:UIControlStateNormal];
+
     [self.mediaButton addTarget:self action:@selector(mediaButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.mediaButton.titleLabel.textColor = [UIColor whiteColor];
     self.mediaButton.layer.cornerRadius=10.0f;
@@ -797,7 +781,7 @@
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%lu.mp4", (unsigned long)[self.videos count]];
+    NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4", [self currentTime]];
     
     BOOL success = [videoData writeToFile:tempPath atomically:NO];
     
@@ -806,6 +790,29 @@
     MPMoviePlayerController* player = [[MPMoviePlayerController alloc]initWithContentURL:pathURL];
     
     return player;
+}
+
+-(NSString*)currentTime
+{
+    NSDate * now = [NSDate date];
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"HH:mm:ss"];
+    return [outputFormatter stringFromDate:now];
+}
+
+
+-(NSURL*) obtainVideoURL:(NSString*)encodedVideo At:(NSIndexPath*)indexPath
+{
+    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:encodedVideo options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%ld.mp4", (long)indexPath.row];
+    
+    BOOL success = [videoData writeToFile:tempPath atomically:NO];
+    
+    NSURL* pathURL = [[NSURL alloc] initFileURLWithPath:tempPath];
+    return pathURL;
 }
 
 -(BOOL)systemVersionLessThan8
@@ -997,244 +1004,243 @@
     return size.height;
 }
 
--(void)moviePlayBackDidFinish:(NSNotification*)notification
-{
-    MPMoviePlayerController *videoplayer = [notification object];
+//-(void)moviePlayBackDidFinish:(NSNotification*)notification
+//{
+//    MPMoviePlayerController *videoplayer = [notification object];
+//
+//    NSLog(@"occured");
+//    [videoplayer prepareToPlay];
+//    
+//}
 
-    NSLog(@"occured");
-    [videoplayer prepareToPlay];
-    
+//-(void)thumbnailImageRetrieved:(NSNotification*)notification
+//{
+//    NSDictionary *userInfo = [notification userInfo];
+//    UIImage *image = [userInfo valueForKey:MPMoviePlayerThumbnailImageKey];
+//    self.thumbnail = image;
+//}
+
+-(void)videoFinished:(MPMoviePlayerController*)player
+{
+    [player stop];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSDictionary *content=self.messages[indexPath.row];
     
-        if (content[@"video"])
+    if (content[@"video"])
+    {
+        MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
+        
+        UIImage* thumbnail = [player thumbnailImageAtTime:1.0f timeOption:MPMovieTimeOptionNearestKeyFrame];
+        
+        UIImageView *thumbnailView = [[UIImageView alloc] initWithImage:thumbnail];
+        UIImageView* playIcon = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"play"]];
+        
+        player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f-8);
+        thumbnailView.frame = player.view.frame;
+        playIcon.frame = CGRectMake(0, 0, 100, 100);
+        playIcon.backgroundColor = [UIColor clearColor];
+        
+        if ([content[@"user"] isEqualToString:self.user.name])
         {
-            MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
+            KJDRightVideoCell* cell = (KJDRightVideoCell*)[tableView dequeueReusableCellWithIdentifier:@"rightVideoCell"];
             
-//            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(thumbnailImageRetrieved) name:@"MPMoviePlayerThumbnailImageRequestDidFinishNotification" object:player];
-//            [player requestThumbnailImagesAtTimes:@[@1.0f] timeOption:MPMovieTimeOptionNearestKeyFrame];
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
             
-            UIImage* thumbnail = [player thumbnailImageAtTime:1.0f timeOption:MPMovieTimeOptionNearestKeyFrame];
-            UIImageView *thumbnailView = [[UIImageView alloc] initWithImage:thumbnail];
-            [player prepareToPlay];
-            player.allowsAirPlay = YES;
-            player.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width * 5/8.0f - 4, self.tableView.frame.size.width * 5/8.0f-8);
-            thumbnailView.frame = player.view.frame;
-            [player.view addSubview:thumbnailView];
-//            player.fullscreen = YES;
-            player.scalingMode = MPMovieScalingModeAspectFit;
-            player.shouldAutoplay = YES;
-            
-//            [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                     selector:@selector(moviePlayBackDidFinish:)
-//                                                         name:MPMoviePlayerPlaybackDidFinishNotification
-//                                                       object:player];
-            
-            if ([content[@"user"] isEqualToString:self.user.name])
+            if (cell == nil)
             {
-                KJDRightVideoCell* cell = (KJDRightVideoCell*)[tableView dequeueReusableCellWithIdentifier:@"rightVideoCell"];
-//                [cell tieVideo:player];
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDRightVideoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightVideoCell"];
-                }
-
-                __weak KJDRightVideoCell* weakCell = cell;
-                
-                [cell setUpSenderNameLabelWithBlock:^{
-//                    [weakCell setUpVideoView];
-                }];
-                [cell setUpVideoView];
-//                cell.player = player;
-//                [cell.player prepareToPlay];
-//                cell.player.scalingMode = MPMovieScalingModeAspectFit;
-                
-                cell.videoView.contentMode = UIViewContentModeScaleAspectFit;
-                cell.senderName.attributedText = attributedUserName;
-                cell.videoView.backgroundColor = [UIColor yellowColor];
-                if ([cell.videoView.subviews count] == 0)
-                {
-//                    cell.videoView = player.view;
-                    [cell.videoView addSubview:player.view];
-                    
-                    NSDate * now = [NSDate date];
-                    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-                    [outputFormatter setDateFormat:@"HH:mm:ss"];
-                    NSString *newDateString = [outputFormatter stringFromDate:now];
-                    [self.videos addObject:newDateString];
-                }
-                [player play];
-                return cell;
+                cell = [[KJDRightVideoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightVideoCell"];
             }
-            else
+            [cell setUpSenderNameLabel];
+            [cell setUpVideoView];
+            
+            cell.senderName.attributedText = attributedUserName;
+            
+            if ([cell.videoView.subviews count] == 0)
             {
-                KJDChatRoomImageCellLeft *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
-                NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
-
-                leftCell.usernameLabel.attributedText=muAtrStr;
-                leftCell.backgroundColor=[UIColor clearColor];
-                [leftCell.mediaImageView setBackgroundColor:[UIColor clearColor]];
-                
-                [leftCell.mediaImageView removeFromSuperview];
-                
-                player.view .frame = CGRectMake(8, 30, 141, 142);
-                
-                player.scalingMode = MPMovieScalingModeAspectFit;
-                [player setControlStyle:MPMovieControlStyleDefault];
+                [player.backgroundView addSubview:thumbnailView];
+                [player.backgroundView addSubview:playIcon];
+                [cell.videoView addSubview:player.view];
+                player.shouldAutoplay = YES;
+                player.allowsAirPlay = YES;
+                player.scalingMode = MPMovieScalingModeAspectFill;
                 player.repeatMode = MPMovieRepeatModeNone;
                 [player play];
-                
-                if ([leftCell.contentView.subviews count] == 1)
-                {
-                    [leftCell.contentView addSubview:player.view];
-                }
-                
-                return leftCell;
-            }
-        }
-         if (content[@"map"])
-        {
-            NSString* imageInCode = content[@"map"];
-            UIImage* imageToDisplay = [self stringToUIImage:imageInCode];
-            
-            if ([content[@"user"] isEqualToString:self.user.name])
-            {
-                KJDRightMediaCell* cell = (KJDRightMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"rightMediaCell"];
-                
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDRightMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightMediaCell"];
-                }
-                [cell setUpSenderNameLabel];
-                [cell setUpMediaView];
-                cell.media.contentMode = UIViewContentModeScaleAspectFit;
-                cell.media.image = imageToDisplay;
-                cell.senderName.attributedText = attributedUserName;
-                
-                return cell;
             }
             else
             {
-                KJDLeftMediaCell* cell = (KJDLeftMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMediaCell"];
-                
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDLeftMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMediaCell"];
-                }
-                [cell setUpSenderNameLabel];
-                [cell setUpMediaView];
-                cell.media.contentMode = UIViewContentModeScaleAspectFit;
-                cell.media.image = imageToDisplay;
-                cell.senderName.attributedText = attributedUserName;
-                
-                return cell;
+                [player pause];
             }
+
+            
+            return cell;
         }
-        else if (content[@"image"])
+        else
         {
+            KJDChatRoomImageCellLeft *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
+            NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
             
-            NSString* imageInCode = content[@"image"];
-            UIImage* imageToDisplay = [self stringToUIImage:imageInCode];
+            leftCell.usernameLabel.attributedText=muAtrStr;
+            leftCell.backgroundColor=[UIColor clearColor];
+            [leftCell.mediaImageView setBackgroundColor:[UIColor clearColor]];
             
-            if ([content[@"user"] isEqualToString:self.user.name])
+            [leftCell.mediaImageView removeFromSuperview];
+            
+            player.view .frame = CGRectMake(8, 30, 141, 142);
+            
+            player.scalingMode = MPMovieScalingModeAspectFit;
+            [player setControlStyle:MPMovieControlStyleDefault];
+            player.repeatMode = MPMovieRepeatModeNone;
+            [player play];
+            
+            if ([leftCell.contentView.subviews count] == 1)
             {
-                KJDRightMediaCell* cell = (KJDRightMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"rightMediaCell"];
-                
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDRightMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightMediaCell"];
-                }
-                [cell setUpSenderNameLabel];
-                [cell setUpMediaView];
-                cell.media.contentMode = UIViewContentModeScaleAspectFit;
-                cell.media.image = imageToDisplay;
-                cell.senderName.attributedText = attributedUserName;
-                
-                return cell;
+                [leftCell.contentView addSubview:player.view];
             }
-            else
-            {
-                KJDLeftMediaCell* cell = (KJDLeftMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMediaCell"];
-                
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDLeftMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMediaCell"];
-                }
-                [cell setUpSenderNameLabel];
-                [cell setUpMediaView];
-                cell.media.contentMode = UIViewContentModeScaleAspectFit;
-                cell.media.image = imageToDisplay;
-                cell.senderName.attributedText = attributedUserName;
-                
-                return cell;
-           }
+            
+            return leftCell;
         }
-        else if (content[@"message"])
+    }
+    if (content[@"map"])
+    {
+        NSString* imageInCode = content[@"map"];
+        UIImage* imageToDisplay = [self stringToUIImage:imageInCode];
+        
+        if ([content[@"user"] isEqualToString:self.user.name])
         {
-            NSString *messageTyped=[NSString stringWithFormat:@"%@", content[@"message"]];
+            KJDRightMediaCell* cell = (KJDRightMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"rightMediaCell"];
             
-            if ([content[@"user"] isEqualToString:self.user.name])
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+            
+            if (cell == nil)
             {
-                KJDMessageCell* cell = (KJDMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"messageCell"];
-                
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
-                [attributedMessage addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0] range:NSMakeRange(0, [attributedMessage length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDMessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"messageCell"];
-                }
-                [cell setUpSenderNameLabel];
-                [cell setUpMessageLabel];
-                cell.senderName.attributedText = attributedUserName;
-                cell.message.attributedText = attributedMessage;
-                
-                return cell;
+                cell = [[KJDRightMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightMediaCell"];
             }
-            else
-            {
-                KJDLeftMessageCell* cell = (KJDLeftMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMessageCell"];
-                
-                NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-                [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
-                
-                NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
-                [attributedMessage addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0] range:NSMakeRange(0, [attributedMessage length])];
-                
-                if (cell == nil)
-                {
-                    cell = [[KJDLeftMessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMessageCell"];
-                }
-                [cell setUpSenderNameLabel];
-                [cell setUpMessageLabel];
-                cell.senderName.attributedText = attributedUserName;
-                cell.message.attributedText = attributedMessage;
-                
-                return cell;
-            }
+            [cell setUpSenderNameLabel];
+            [cell setUpMediaView];
+            cell.media.contentMode = UIViewContentModeScaleAspectFit;
+            cell.media.image = imageToDisplay;
+            cell.senderName.attributedText = attributedUserName;
+            
+            return cell;
         }
+        else
+        {
+            KJDLeftMediaCell* cell = (KJDLeftMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMediaCell"];
+            
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+            
+            if (cell == nil)
+            {
+                cell = [[KJDLeftMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMediaCell"];
+            }
+            [cell setUpSenderNameLabel];
+            [cell setUpMediaView];
+            cell.media.contentMode = UIViewContentModeScaleAspectFit;
+            cell.media.image = imageToDisplay;
+            cell.senderName.attributedText = attributedUserName;
+            
+            return cell;
+        }
+    }
+    else if (content[@"image"])
+    {
+        
+        NSString* imageInCode = content[@"image"];
+        UIImage* imageToDisplay = [self stringToUIImage:imageInCode];
+        
+        if ([content[@"user"] isEqualToString:self.user.name])
+        {
+            KJDRightMediaCell* cell = (KJDRightMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"rightMediaCell"];
+            
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+            
+            if (cell == nil)
+            {
+                cell = [[KJDRightMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"rightMediaCell"];
+            }
+            [cell setUpSenderNameLabel];
+            [cell setUpMediaView];
+            cell.media.contentMode = UIViewContentModeScaleAspectFit;
+            cell.media.image = imageToDisplay;
+            cell.senderName.attributedText = attributedUserName;
+            
+            return cell;
+        }
+        else
+        {
+            KJDLeftMediaCell* cell = (KJDLeftMediaCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMediaCell"];
+            
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+            
+            if (cell == nil)
+            {
+                cell = [[KJDLeftMediaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMediaCell"];
+            }
+            [cell setUpSenderNameLabel];
+            [cell setUpMediaView];
+            cell.media.contentMode = UIViewContentModeScaleAspectFit;
+            cell.media.image = imageToDisplay;
+            cell.senderName.attributedText = attributedUserName;
+            
+            return cell;
+        }
+    }
+    else if (content[@"message"])
+    {
+        NSString *messageTyped=[NSString stringWithFormat:@"%@", content[@"message"]];
+        
+        if ([content[@"user"] isEqualToString:self.user.name])
+        {
+            KJDMessageCell* cell = (KJDMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"messageCell"];
+            
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+            
+            NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
+            [attributedMessage addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0] range:NSMakeRange(0, [attributedMessage length])];
+            
+            if (cell == nil)
+            {
+                cell = [[KJDMessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"messageCell"];
+            }
+            [cell setUpSenderNameLabel];
+            [cell setUpMessageLabel];
+            cell.senderName.attributedText = attributedUserName;
+            cell.message.attributedText = attributedMessage;
+            
+            return cell;
+        }
+        else
+        {
+            KJDLeftMessageCell* cell = (KJDLeftMessageCell*)[tableView dequeueReusableCellWithIdentifier:@"leftMessageCell"];
+            
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
+            
+            NSMutableAttributedString *attributedMessage = [[NSMutableAttributedString alloc]initWithString:messageTyped];
+            [attributedMessage addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0] range:NSMakeRange(0, [attributedMessage length])];
+            
+            if (cell == nil)
+            {
+                cell = [[KJDLeftMessageCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftMessageCell"];
+            }
+            [cell setUpSenderNameLabel];
+            [cell setUpMessageLabel];
+            cell.senderName.attributedText = attributedUserName;
+            cell.message.attributedText = attributedMessage;
+            
+            return cell;
+        }
+    }
     return nil;
 }
 
@@ -1256,40 +1262,13 @@
         {
         }];
     }
-//    else if (content[@"video"])
-//    {
-//        MPMoviePlayerController* player = [self stringToVideo:content[@"video"]];
-//        player.view.frame = CGRectMake(170, 30, 141, 142);
-//        
-//        player.scalingMode = MPMovieScalingModeAspectFit;
-//        [player setControlStyle:MPMovieControlStyleDefault];
-//        player.repeatMode = MPMovieRepeatModeNone;
-//        [player play];
-//        UITableViewCell* videoCell = [self.tableView cellForRowAtIndexPath:indexPath];
-//        KJDChatRoomImageCellRight *rightCell=((KJDChatRoomImageCellRight *) videoCell);
-//        if ([rightCell.contentView.subviews count] == 1)
-//        {
-//            [rightCell.contentView addSubview:player.view];
-//        }
-//    }
+    else if (content[@"video"])
+    {
+        NSURL* videoURL = [self obtainVideoURL:content[@"video"] At:indexPath];
+        KJDVideoDisplayer* videoDisplay = [[KJDVideoDisplayer alloc]initWithContentURL:videoURL];
+        [self presentMoviePlayerViewControllerAnimated:videoDisplay];
+    }
 }
 
-//- (void) moviePlayBackDidFinish:(NSNotification*)notification
-//{
-//    MPMoviePlayerController *player = [notification object];
-//    [[NSNotificationCenter defaultCenter]
-//     removeObserver:self
-//     name:MPMoviePlayerPlaybackDidFinishNotification
-//     object:player];
-//    
-//    if ([player
-//         respondsToSelector:@selector(setFullscreen:animated:)])
-//    {
-//        [player play];
-//[self.movieController stop];
-//[self.movieController prepareToPlay];
-//[self.movieController pause];
-//    }
-//}
 
 @end

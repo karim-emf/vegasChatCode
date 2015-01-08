@@ -25,8 +25,12 @@
     [super viewDidLoad];
     UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
     backgroundImage.frame=self.view.frame;
+    UIImageView* vegasSign = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"vegasSign"]];
+    vegasSign.frame = CGRectMake(0, 30, self.view.frame.size.width, [self heightForImage:[UIImage imageNamed:@"vegasSign"]]);
+    vegasSign.backgroundColor = [UIColor clearColor];
     [self.view addSubview:backgroundImage];
     [self.view sendSubviewToBack:backgroundImage];
+    [self.view addSubview:vegasSign];
     self.navigationController.navigationBarHidden = YES;
     [self setupViewsAndConstraints];
     
@@ -38,6 +42,13 @@
                                                                           action:@selector(dismissKeyboard)];
     tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
+}
+
+-(CGFloat) heightForImage:(UIImage*)picture
+{
+    CGFloat ratio = picture.size.height/picture.size.width;
+    CGFloat cellHeight = ratio * self.view.frame.size.width;
+    return cellHeight;
 }
 
 -(void)dismissKeyboard {
@@ -64,7 +75,7 @@
 }
 
 - (void)setupViewsAndConstraints{
-    [self setupLabel];
+//    [self setupLabel];
     [self setupChatCodeField];
     [self setupEnterButton];
 }
@@ -122,6 +133,13 @@
     UIColor *borderColor=[UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
     self.chatCodeField.rightViewMode=UITextFieldViewModeAlways;
     self.chatCodeField.rightView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"magnifyingglass"]];
+    self.chatCodeField.attributedPlaceholder =
+    [[NSAttributedString alloc] initWithString:@"Enter Chatroom ID"
+                                    attributes:@{
+                                                 NSForegroundColorAttributeName: [UIColor darkGrayColor]
+//                                                 NSFontAttributeName : [UIFont fontWithName:@"Roboto-Bold" size:17.0]
+                                                 }
+     ];
     self.chatCodeField.layer.borderColor=[borderColor CGColor];
     self.chatCodeField.layer.borderWidth=1.0f;
     self.chatCodeField.textAlignment=NSTextAlignmentCenter;
@@ -130,7 +148,7 @@
     NSLayoutConstraint *chatCodeFieldX = [NSLayoutConstraint constraintWithItem:self.chatCodeField
                                                                       attribute:NSLayoutAttributeCenterX
                                                                       relatedBy:NSLayoutRelationEqual
-                                                                         toItem:self.enterLabel
+                                                                         toItem:self.view
                                                                       attribute:NSLayoutAttributeCenterX
                                                                      multiplier:1.0
                                                                        constant:0.0];
@@ -138,25 +156,25 @@
     NSLayoutConstraint *chatCodeFieldTop = [NSLayoutConstraint constraintWithItem:self.chatCodeField
                                                                         attribute:NSLayoutAttributeTop
                                                                         relatedBy:NSLayoutRelationEqual
-                                                                           toItem:self.enterLabel
-                                                                        attribute:NSLayoutAttributeBottom
+                                                                           toItem:self.view
+                                                                        attribute:NSLayoutAttributeTop
                                                                        multiplier:1.0
-                                                                         constant:7.0];
+                                                                         constant:30.0 + /*150.0 */ [self heightForImage:[UIImage imageNamed:@"vegasSign"]] + 10.0];
     
     NSLayoutConstraint *chatCodeFieldWidth = [NSLayoutConstraint constraintWithItem:self.chatCodeField
                                                                           attribute:NSLayoutAttributeWidth
                                                                           relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.enterLabel
+                                                                             toItem:self.view
                                                                           attribute:NSLayoutAttributeWidth
-                                                                         multiplier:1.5
+                                                                         multiplier:0.9
                                                                            constant:0.0];
     
     NSLayoutConstraint *chatCodeFieldHeight = [NSLayoutConstraint constraintWithItem:self.chatCodeField
                                                                            attribute:NSLayoutAttributeHeight
                                                                            relatedBy:NSLayoutRelationEqual
-                                                                              toItem:self.enterLabel
+                                                                              toItem:self.view
                                                                            attribute:NSLayoutAttributeHeight
-                                                                          multiplier:1.0
+                                                                          multiplier:0.07
                                                                             constant:0.0];
     
     [self.view addConstraints:@[chatCodeFieldX, chatCodeFieldTop, chatCodeFieldWidth, chatCodeFieldHeight]];
@@ -193,9 +211,9 @@
     NSLayoutConstraint *enterButtonWidth = [NSLayoutConstraint constraintWithItem:self.enterButton
                                                                         attribute:NSLayoutAttributeWidth
                                                                         relatedBy:NSLayoutRelationEqual
-                                                                           toItem:self.enterLabel
+                                                                           toItem:self.view
                                                                         attribute:NSLayoutAttributeWidth
-                                                                       multiplier:0.66
+                                                                       multiplier:0.36
                                                                          constant:0.0];
     
     NSLayoutConstraint *enterButtonHeight = [NSLayoutConstraint constraintWithItem:self.enterButton

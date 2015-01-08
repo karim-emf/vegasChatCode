@@ -16,6 +16,7 @@
 #import "KJDLeftMediaCell.h"
 #import "KJDRightVideoCell.h"
 #import "KJDVideoDisplayer.h"
+#import "KJDLeftVideoCell.h"
 
 
 
@@ -53,6 +54,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame: CGRectZero];
+    [self.view addSubview: volumeView];
     
     UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
     backgroundImage.frame=self.view.frame;
@@ -1004,14 +1007,22 @@
     return size.height;
 }
 
-//-(void)moviePlayBackDidFinish:(NSNotification*)notification
-//{
-//    MPMoviePlayerController *videoplayer = [notification object];
-//
-//    NSLog(@"occured");
-//    [videoplayer prepareToPlay];
-//    
-//}
+-(void)changeVolumeTo:(CGFloat)level
+{
+    MPVolumeView* volumeView = [[MPVolumeView alloc] init];
+    UISlider* volumeViewSlider = nil;
+    
+    for (UIView *view in [volumeView subviews])
+    {
+        if ([view.class.description isEqualToString:@"MPVolumeSlider"])
+        {
+            volumeViewSlider = (UISlider*)view;
+            break;
+        }
+    }
+    [volumeViewSlider setValue:level animated:NO];
+    [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
+}
 
 //-(void)thumbnailImageRetrieved:(NSNotification*)notification
 //{
@@ -1020,10 +1031,6 @@
 //    self.thumbnail = image;
 //}
 
--(void)videoFinished:(MPMoviePlayerController*)player
-{
-    [player stop];
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -1042,7 +1049,8 @@
         thumbnailView.frame = player.view.frame;
         playIcon.frame = CGRectMake(0, 0, 100, 100);
         playIcon.backgroundColor = [UIColor clearColor];
-        
+        [self changeVolumeTo:0];
+    
         if ([content[@"user"] isEqualToString:self.user.name])
         {
             KJDRightVideoCell* cell = (KJDRightVideoCell*)[tableView dequeueReusableCellWithIdentifier:@"rightVideoCell"];
@@ -1080,29 +1088,36 @@
         }
         else
         {
-            KJDChatRoomImageCellLeft *leftCell=[tableView dequeueReusableCellWithIdentifier:@"imageCellLeft"];
-            NSMutableAttributedString *muAtrStr = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
-            [muAtrStr addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [muAtrStr length])];
+            KJDLeftVideoCell* cell = (KJDLeftVideoCell*)[tableView dequeueReusableCellWithIdentifier:@"leftVideoCell"];
             
-            leftCell.usernameLabel.attributedText=muAtrStr;
-            leftCell.backgroundColor=[UIColor clearColor];
-            [leftCell.mediaImageView setBackgroundColor:[UIColor clearColor]];
+            NSMutableAttributedString *attributedUserName = [[NSMutableAttributedString alloc]initWithString:content[@"user"]];
+            [attributedUserName addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-MediumItalic" size:15] range:NSMakeRange(0, [attributedUserName length])];
             
-            [leftCell.mediaImageView removeFromSuperview];
-            
-            player.view .frame = CGRectMake(8, 30, 141, 142);
-            
-            player.scalingMode = MPMovieScalingModeAspectFit;
-            [player setControlStyle:MPMovieControlStyleDefault];
-            player.repeatMode = MPMovieRepeatModeNone;
-            [player play];
-            
-            if ([leftCell.contentView.subviews count] == 1)
+            if (cell == nil)
             {
-                [leftCell.contentView addSubview:player.view];
+                cell = [[KJDLeftVideoCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftVideoCell"];
             }
+            [cell setUpSenderNameLabel];
+            [cell setUpVideoView];
             
-            return leftCell;
+            cell.senderName.attributedText = attributedUserName;
+            
+            if ([cell.videoView.subviews count] == 0)
+            {
+                [player.backgroundView addSubview:thumbnailView];
+                [player.backgroundView addSubview:playIcon];
+                [cell.videoView addSubview:player.view];
+                player.shouldAutoplay = YES;
+                player.allowsAirPlay = YES;
+                player.scalingMode = MPMovieScalingModeAspectFill;
+                player.repeatMode = MPMovieRepeatModeNone;
+                [player play];
+            }
+            else
+            {
+                [player pause];
+            }
+            return cell;
         }
     }
     if (content[@"map"])
@@ -1266,6 +1281,7 @@
     {
         NSURL* videoURL = [self obtainVideoURL:content[@"video"] At:indexPath];
         KJDVideoDisplayer* videoDisplay = [[KJDVideoDisplayer alloc]initWithContentURL:videoURL];
+        [self changeVolumeTo:1.0f];
         [self presentMoviePlayerViewControllerAnimated:videoDisplay];
     }
 }

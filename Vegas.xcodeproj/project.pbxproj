@@ -57,6 +57,9 @@
 		8AD515651A5C34B800844DAF /* KJDVideoDisplayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD515641A5C34B800844DAF /* KJDVideoDisplayer.m */; };
 		8AD515671A5C856100844DAF /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD515661A5C856100844DAF /* play.png */; };
 		8AD515691A5C856800844DAF /* bt_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD515681A5C856800844DAF /* bt_play.png */; };
+		8AD5156C1A5D752B00844DAF /* KJDLeftVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5156B1A5D752B00844DAF /* KJDLeftVideoCell.m */; };
+		8AD5156E1A5E328F00844DAF /* vegasAppicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD5156D1A5E328F00844DAF /* vegasAppicon.png */; };
+		8AD515701A5E32F100844DAF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD5156F1A5E32F100844DAF /* Default-568h@2x.png */; };
 		8AD8FB0C1A4C96ED00187553 /* games-abstract-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB0B1A4C96ED00187553 /* games-abstract-7.png */; };
 		8AD8FB0E1A4C96F900187553 /* gear-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB0D1A4C96F900187553 /* gear-7.png */; };
 		8AD8FB101A4C972400187553 /* paper-plane-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB0F1A4C972400187553 /* paper-plane-7.png */; };
@@ -64,8 +67,8 @@
 		8AD8FB141A4C993A00187553 /* photo-abstract-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB131A4C993A00187553 /* photo-abstract-7.png */; };
 		8AD8FB161A4D075100187553 /* settings18.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD8FB151A4D075100187553 /* settings18.png */; };
 		8AD8FB1A1A51F13800187553 /* KJDMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD8FB191A51F13800187553 /* KJDMessageCell.m */; };
-		8AF7FF5A1A3BAE7800A9B4E4 /* vegasAppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF7FF591A3BAE7800A9B4E4 /* vegasAppIcon.png */; };
-		8AF7FF5C1A3BB09800A9B4E4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF7FF5B1A3BB09800A9B4E4 /* Default-568h@2x.png */; };
+		8AF7FF5A1A3BAE7800A9B4E4 /* oldVegasAppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF7FF591A3BAE7800A9B4E4 /* oldVegasAppIcon.png */; };
+		8AF7FF5C1A3BB09800A9B4E4 /* oldDefault-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AF7FF5B1A3BB09800A9B4E4 /* oldDefault-568h@2x.png */; };
 		B19C3A341A1FE748002868B1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C3A331A1FE748002868B1 /* main.m */; };
 		B19C3A371A1FE79E002868B1 /* KJDLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C3A361A1FE79E002868B1 /* KJDLoginViewController.m */; };
 		BD71407CCB2854C8BCF55FE3 /* libPods-Vegas.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 41E89D24A220E31E9A949BD9 /* libPods-Vegas.a */; };
@@ -157,6 +160,10 @@
 		8AD515641A5C34B800844DAF /* KJDVideoDisplayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDVideoDisplayer.m; sourceTree = "<group>"; };
 		8AD515661A5C856100844DAF /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		8AD515681A5C856800844DAF /* bt_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bt_play.png; sourceTree = "<group>"; };
+		8AD5156A1A5D752B00844DAF /* KJDLeftVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDLeftVideoCell.h; sourceTree = "<group>"; };
+		8AD5156B1A5D752B00844DAF /* KJDLeftVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDLeftVideoCell.m; sourceTree = "<group>"; };
+		8AD5156D1A5E328F00844DAF /* vegasAppicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vegasAppicon.png; sourceTree = "<group>"; };
+		8AD5156F1A5E32F100844DAF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8AD8FB0B1A4C96ED00187553 /* games-abstract-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "games-abstract-7.png"; sourceTree = "<group>"; };
 		8AD8FB0D1A4C96F900187553 /* gear-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gear-7.png"; sourceTree = "<group>"; };
 		8AD8FB0F1A4C972400187553 /* paper-plane-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "paper-plane-7.png"; sourceTree = "<group>"; };
@@ -165,8 +172,8 @@
 		8AD8FB151A4D075100187553 /* settings18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings18.png; sourceTree = "<group>"; };
 		8AD8FB181A51F13800187553 /* KJDMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDMessageCell.h; sourceTree = "<group>"; };
 		8AD8FB191A51F13800187553 /* KJDMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDMessageCell.m; sourceTree = "<group>"; };
-		8AF7FF591A3BAE7800A9B4E4 /* vegasAppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vegasAppIcon.png; sourceTree = "<group>"; };
-		8AF7FF5B1A3BB09800A9B4E4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		8AF7FF591A3BAE7800A9B4E4 /* oldVegasAppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = oldVegasAppIcon.png; sourceTree = "<group>"; };
+		8AF7FF5B1A3BB09800A9B4E4 /* oldDefault-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "oldDefault-568h@2x.png"; sourceTree = "<group>"; };
 		B19C3A331A1FE748002868B1 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B19C3A351A1FE79E002868B1 /* KJDLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDLoginViewController.h; sourceTree = "<group>"; };
 		B19C3A361A1FE79E002868B1 /* KJDLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDLoginViewController.m; sourceTree = "<group>"; };
@@ -220,9 +227,11 @@
 			isa = PBXGroup;
 			children = (
 				8A45F5301A373ECC00A69E17 /* images.xcassets */,
-				8AF7FF591A3BAE7800A9B4E4 /* vegasAppIcon.png */,
+				8AF7FF591A3BAE7800A9B4E4 /* oldVegasAppIcon.png */,
+				8AD5156D1A5E328F00844DAF /* vegasAppicon.png */,
 				0BAA8C651A2441FB00B7E5AF /* background.png */,
-				8AF7FF5B1A3BB09800A9B4E4 /* Default-568h@2x.png */,
+				8AF7FF5B1A3BB09800A9B4E4 /* oldDefault-568h@2x.png */,
+				8AD5156F1A5E32F100844DAF /* Default-568h@2x.png */,
 				0BAA8C5F1A243F1300B7E5AF /* magnifyingglass.png */,
 				8A45F5321A38020900A69E17 /* myLaunchImage.png */,
 				8AD8FB0D1A4C96F900187553 /* gear-7.png */,
@@ -365,6 +374,8 @@
 				8A3938641A53B7DA00CBB5E1 /* KJDLeftMediaCell.m */,
 				8AD5155D1A58CEB400844DAF /* KJDRightVideoCell.h */,
 				8AD5155E1A58CEB400844DAF /* KJDRightVideoCell.m */,
+				8AD5156A1A5D752B00844DAF /* KJDLeftVideoCell.h */,
+				8AD5156B1A5D752B00844DAF /* KJDLeftVideoCell.m */,
 			);
 			name = karimCells;
 			sourceTree = "<group>";
@@ -503,8 +514,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AD515701A5E32F100844DAF /* Default-568h@2x.png in Resources */,
 				8AD8FB0E1A4C96F900187553 /* gear-7.png in Resources */,
-				8AF7FF5C1A3BB09800A9B4E4 /* Default-568h@2x.png in Resources */,
+				8AF7FF5C1A3BB09800A9B4E4 /* oldDefault-568h@2x.png in Resources */,
 				8A45F55B1A38B31500A69E17 /* KJDChatRoomTableViewCellLeft.xib in Resources */,
 				8A45F5331A38020900A69E17 /* myLaunchImage.png in Resources */,
 				0BA1E8041A23F9AB0091DC3C /* KJDChatRoomTableViewCell.xib in Resources */,
@@ -519,11 +531,12 @@
 				8AD515691A5C856800844DAF /* bt_play.png in Resources */,
 				8AD8FB121A4C973200187553 /* photo-abstract-71.png in Resources */,
 				8AD515671A5C856100844DAF /* play.png in Resources */,
+				8AD5156E1A5E328F00844DAF /* vegasAppicon.png in Resources */,
 				8A45F5471A389FA400A69E17 /* KJDMediaCellRight.xib in Resources */,
 				8A45F5611A38B31500A69E17 /* KJDChatRoomImageCellRight.xib in Resources */,
 				0BAA8C661A2441FB00B7E5AF /* background.png in Resources */,
 				0BAA8C601A243F1300B7E5AF /* magnifyingglass.png in Resources */,
-				8AF7FF5A1A3BAE7800A9B4E4 /* vegasAppIcon.png in Resources */,
+				8AF7FF5A1A3BAE7800A9B4E4 /* oldVegasAppIcon.png in Resources */,
 				8AD8FB161A4D075100187553 /* settings18.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -583,6 +596,7 @@
 				8A39385F1A53337900CBB5E1 /* KJDLeftMessageCell.m in Sources */,
 				0BFE380B1A1FE1C200EA4D28 /* KJDUser.m in Sources */,
 				8AD8FB1A1A51F13800187553 /* KJDMessageCell.m in Sources */,
+				8AD5156C1A5D752B00844DAF /* KJDLeftVideoCell.m in Sources */,
 				0BFE38101A1FE1EB00EA4D28 /* AppDelegate.m in Sources */,
 				0B2430361A2698B2007E60C1 /* KJDMapKitViewController.m in Sources */,
 				8A45F5411A389F6E00A69E17 /* KJDMediaCellLeft.m in Sources */,

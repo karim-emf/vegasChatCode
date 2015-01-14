@@ -90,7 +90,7 @@
 
 -(void) setUpMapView
 {
-    self.mapView = [[MKMapView alloc] init];//WithFrame:CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height - 100)];
+    self.mapView = [[MKMapView alloc] init];
     [self.view addSubview:self.mapView];
     self.mapView.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -133,7 +133,7 @@
 {
     self.yesButton = [[UIButton alloc] init];
     [self.view addSubview:self.yesButton];
-    self.yesButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
+    self.yesButton.backgroundColor=[UIColor colorWithRed:4/255.0f green:74/255.0f blue:11/255.0f alpha:1];
     self.yesButton.layer.cornerRadius=10.0f;
     self.yesButton.layer.masksToBounds=YES;
     [self.yesButton setAttributedTitle:[[NSAttributedString alloc] initWithString:@"Send!" attributes:nil] forState:UIControlStateNormal];
@@ -182,7 +182,7 @@
 
 - (void)yesButtonTapped
 {
-    self.yesButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
+    self.yesButton.backgroundColor=[UIColor colorWithRed:4/255.0f green:74/255.0f blue:11/255.0f alpha:1];
     self.yesButton.titleLabel.textColor=[UIColor whiteColor];
     
     UIImage* mapImage = [self imageWithView:self.mapView];
@@ -200,14 +200,14 @@
                                        @"map":photoInString}];
 }
 -(NSString *)imageToNSString:(UIImage *)image{
-    NSData *imageData = UIImageJPEGRepresentation(image, 0.1); //UIImagePNGRepresentation(image);
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.1);
     return [imageData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 
 -(void)yesButtonNormal
 {
-    self.yesButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
+    self.yesButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:.5];
 }
 
 -(void) setUpNoButton
@@ -262,8 +262,8 @@
 
 - (void)noButtonTapped
 {
-    self.yesButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
-    self.yesButton.titleLabel.textColor=[UIColor whiteColor];
+    self.noButton.backgroundColor=[UIColor redColor];
+    self.noButton.titleLabel.textColor=[UIColor whiteColor];
     [self dismissViewControllerAnimated:YES completion:^{
         
     }];
@@ -271,7 +271,7 @@
 
 -(void)noButtonNormal
 {
-    self.yesButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
+    self.noButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:.1];
 }
 
 - (UIImage *) imageWithView:(UIView *)view
@@ -285,15 +285,5 @@
     
     return img;
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

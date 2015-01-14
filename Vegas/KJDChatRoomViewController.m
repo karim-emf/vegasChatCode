@@ -17,7 +17,7 @@
 #import "KJDRightVideoCell.h"
 #import "KJDVideoDisplayer.h"
 #import "KJDLeftVideoCell.h"
-
+#import "KJDLoginViewController.h"
 
 
 
@@ -54,6 +54,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame: CGRectZero];
     [self.view addSubview: volumeView];
     
@@ -64,9 +65,9 @@
     [self.view addSubview:backgroundImage];
     [self.view sendSubviewToBack:backgroundImage];
     
+    //del?
     self.videos = [NSMutableArray new];
     
-    //**************************
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
@@ -75,14 +76,53 @@
     self.firstTimeInRoom = true;
     self.chatRoom.firstTimeInRoom= true;
     self.inputTextField.delegate=self;
-    [self setupViewsAndConstraints];
     self.user=self.chatRoom.user;
+    self.currentlyInRoom = YES;
     
+    [self setupViewsAndConstraints];
+    [self setUpFirebase];
+    [self setUpNotificationCenter];
+    
+
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(dismissKeyboard)];
+    tap.cancelsTouchesInView = NO;
+    [self.tableView addGestureRecognizer:tap];
+    [self presentIntroMessage];
+}
+
+-(void) presentIntroMessage
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:hasRunAppOnceKey] == NO)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Welcome to your first Vegas Chat Room!" message:@"To type a message, tap the field located at the bottom. To share media, tap the button at the bottom left.\nFor anonymousity, you have been assigned a random name; if you wish to change your name, tap the settings button located at the top right. To exit the chat room tap the Exit button at the upper left. Note that messages sent during your absence will not be received. As soon as all users exit, the room will be deleted and there will be no trace of its existence, ensuring that:\n * What happens in Vegas *\n * stays in Vegas *."];
+        [modal show];
+    }
+}
+
+-(void) setUpNotificationCenter
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+-(void) setUpFirebase
+{
     [self.chatRoom setupFirebaseWithCompletionBlock:^(BOOL completed)
      {
          if (completed)
          {
-             [self.chatRoom setUpContentFirebaseWithCompletionBlock:^(BOOL completed) {
+             [self.chatRoom setUpContentFirebaseWithCompletionBlock:^(BOOL completed)
+             {
                  self.messages = self.chatRoom.messages;
                  self.user = self.chatRoom.user;
                  [[NSOperationQueue mainQueue]addOperationWithBlock:^{
@@ -102,39 +142,22 @@
               }];
              
              [self.chatRoom setUpNameSwitchFireBaseWithCompletionBlock:^(NSDictionary *nameChange)
-             {
-                 if ([nameChange[@"oldName"] isEqual:self.user.name])
-                 {
-                     self.user.name = nameChange[@"newName"];
-                 }
-                 
-                 for (NSMutableDictionary* message in self.messages)
-                 {
-                     if ([message[@"user"] isEqual:nameChange[@"oldName"]]) {
-                         message[@"user"] = nameChange[@"newName"];
-                     }
-                 }
-                 
-             }];
+              {
+                  if ([nameChange[@"oldName"] isEqual:self.user.name])
+                  {
+                      self.user.name = nameChange[@"newName"];
+                  }
+                  
+                  for (NSMutableDictionary* message in self.messages)
+                  {
+                      if ([message[@"user"] isEqual:nameChange[@"oldName"]]) {
+                          message[@"user"] = nameChange[@"newName"];
+                      }
+                  }
+                  
+              }];
          }
      }];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(thumbnailImageRetrieved:) name:MPMoviePlayerThumbnailImageRequestDidFinishNotification object:nil];
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                          action:@selector(dismissKeyboard)];
-    tap.cancelsTouchesInView = NO;
-    [self.tableView addGestureRecognizer:tap];
 }
 
 //jan
@@ -150,27 +173,49 @@
     UIEdgeInsets inset = UIEdgeInsetsMake(self.keyBoardFrame.size.height+self.navigationController.navigationBar.frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height, 0, 0, 0);
     UIEdgeInsets afterInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height+[UIApplication sharedApplication].statusBarFrame.size.height, 0, 0, 0);
     
-    if (moveUp){
+    if (moveUp)
+    {
         superViewRect.origin.y -= self.keyBoardFrame.size.height;
         [UIView transitionWithView:self.usernameView
-                          duration:0.3
+                          duration:0
                            options:0
                         animations:^{
                             self.view.frame = superViewRect;
                             self.tableView.contentInset = inset;
                             self.usernameView.frame = usernameViewFramePostKeyboardUp;
+                            
+                            [NSLayoutConstraint deactivateConstraints:@[self.usernameViewTop]];
+                            self.usernameViewTop=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                                              attribute:NSLayoutAttributeTop
+                                                                              relatedBy:NSLayoutRelationEqual                                                         toItem:self.view
+                                                                              attribute:NSLayoutAttributeTop
+                                                                             multiplier:1.0
+                                                                               constant:self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height + self.keyBoardFrame.size.height];
+                            [self.view addConstraint:self.usernameViewTop];
+                            [self.view setNeedsUpdateConstraints];
                         }
                         completion:nil];
-        
-    }else{
+    }
+    else
+    {
         superViewRect.origin.y += self.keyBoardFrame.size.height;
         [UIView transitionWithView:self.usernameView
-                          duration:0.3
+                          duration:0
                            options:0
                         animations:^{
                             self.view.frame = superViewRect;
                             self.tableView.contentInset = inset;
                             self.usernameView.frame = usernameViewFramePostKeyboardDown;
+                            
+                            [NSLayoutConstraint deactivateConstraints:@[self.usernameViewTop]];
+                            self.usernameViewTop=[NSLayoutConstraint constraintWithItem:self.usernameView
+                                                                              attribute:NSLayoutAttributeTop
+                                                                              relatedBy:NSLayoutRelationEqual                                                         toItem:self.view
+                                                                              attribute:NSLayoutAttributeTop
+                                                                             multiplier:1.0
+                                                                               constant:self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height];
+                            [self.view addConstraint:self.usernameViewTop];
+                            [self.view setNeedsUpdateConstraints];
                         }
                         completion:nil];
         self.tableView.contentInset = afterInset;
@@ -209,7 +254,8 @@
 
 //jan
 -(void)toggleUsernameView{
-    if (self.usernameView.hidden) {
+    if (self.usernameView.hidden)
+    {
         [UIView transitionWithView:self.usernameView
                           duration:0.4
                            options:UIViewAnimationOptionTransitionFlipFromRight
@@ -217,7 +263,9 @@
                             self.usernameView.hidden=NO;
                         }
                         completion:nil];
-    }else{
+    }
+    else
+    {
         [UIView transitionWithView:self.usernameView
                           duration:0.4
                            options:UIViewAnimationOptionTransitionFlipFromRight
@@ -229,7 +277,8 @@
 }
 
 //jan
--(void)setupUsernameView{
+-(void)setupUsernameView
+{
     self.usernameView=[[UIView alloc]init];
     UIColor *backgroundColor=[UIColor colorWithRed:0 green:0 blue:0 alpha:0.2];
     self.usernameView.backgroundColor=backgroundColor;
@@ -240,8 +289,7 @@
 
     self.usernameViewTop=[NSLayoutConstraint constraintWithItem:self.usernameView
                                                       attribute:NSLayoutAttributeTop
-                                                      relatedBy:NSLayoutRelationEqual
-                                                         toItem:self.view
+                                                      relatedBy:NSLayoutRelationGreaterThanOrEqual                                                         toItem:self.view
                                                       attribute:NSLayoutAttributeTop
                                                      multiplier:1.0
                                                        constant:self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height];
@@ -365,6 +413,7 @@
     if (![parent isEqual:self.parentViewController])
     {
         [self removeUserFromChatRoom];
+        self.currentlyInRoom = NO;
     }
 }
 
@@ -444,8 +493,8 @@
                              forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.shadowImage = [UIImage new];
     self.navigationController.navigationBar.translucent = YES;
-
     self.navigationItem.backBarButtonItem.enabled = YES;
+
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     //form stackOF
@@ -459,9 +508,9 @@
     UILabel *titleView = [[UILabel alloc] initWithFrame:titleFrame];
     titleView.backgroundColor = [UIColor clearColor];
     titleView.font = [UIFont boldSystemFontOfSize:20];
-    titleView.textAlignment = UITextAlignmentCenter;
+    titleView.textAlignment = NSTextAlignmentCenter;
     titleView.textColor = [UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1.0];
-    titleView.text = self.chatRoom.firebaseRoomURL;
+    titleView.text = self.chatRoom.firebaseRoomName;
     titleView.adjustsFontSizeToFitWidth = YES;
     [headerTitleSubtitleView addSubview:titleView];
     
@@ -469,10 +518,9 @@
     self.subtitleView = [[UILabel alloc] initWithFrame:subtitleFrame];
     self.subtitleView.backgroundColor = [UIColor clearColor];
     self.subtitleView.font = [UIFont boldSystemFontOfSize:13];
-    self.subtitleView.textAlignment = UITextAlignmentCenter;
+    self.subtitleView.textAlignment = NSTextAlignmentCenter;
     self.subtitleView.textColor = [UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1.0];
     self.subtitleView.shadowColor = [UIColor darkGrayColor];
-//    self.subtitleView.shadowOffset = CGSizeMake(0, -1);
     [self setUserCountInSubtitle];
     self.subtitleView.adjustsFontSizeToFitWidth = YES;
     [headerTitleSubtitleView addSubview:self.subtitleView];
@@ -503,7 +551,7 @@
 
 -(void) setUpSettingsButton
 {
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings18"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUsernameView)];//settingsButtonTapped)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings18"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUsernameView)];
     rightButton.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = rightButton;
 }
@@ -530,11 +578,6 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     [self.view sendSubviewToBack:self.tableView.backgroundView];
     self.tableView.clipsToBounds=YES;
-    
-    [self.tableView registerNib:[UINib nibWithNibName:@"KJDChatRoomTableViewCellLeft" bundle:nil] forCellReuseIdentifier:@"normalCellLeft"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"KJDChatRoomTableViewCellRight" bundle:nil] forCellReuseIdentifier:@"normalCellRight"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"KJDChatRoomImageCellLeft" bundle:nil] forCellReuseIdentifier:@"imageCellLeft"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"KJDChatRoomImageCellRight" bundle:nil] forCellReuseIdentifier:@"imageCellRight"];
     
     self.tableView.scrollEnabled=YES;
     
@@ -579,7 +622,7 @@
 
 - (void)sendButtonTapped
 {
-    self.sendButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
+    self.sendButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:0.5];
 
 }
 
@@ -657,6 +700,7 @@
     [self.mediaButton setImage:[UIImage imageNamed:@"photo-abstract-7"] forState:UIControlStateNormal];
 
     [self.mediaButton addTarget:self action:@selector(mediaButtonTapped) forControlEvents:UIControlEventTouchUpInside];
+    [self.mediaButton addTarget:self action:@selector(mediaButtonTappedForBackground) forControlEvents:UIControlEventTouchDown];
     self.mediaButton.titleLabel.textColor = [UIColor whiteColor];
     self.mediaButton.layer.cornerRadius=10.0f;
     self.mediaButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -694,6 +738,11 @@
                                                                         constant:-4];
     
     [self.view addConstraints:@[mediaButtonTop, mediaButtonBottom, mediaButtonLeft, mediaButtonRight]];
+}
+
+-(void)mediaButtonTappedForBackground
+{
+    self.mediaButton.backgroundColor = [UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:.5];
 }
 
 - (void)setupTextField{
@@ -780,13 +829,13 @@
 
 -(MPMoviePlayerController*)stringToVideo:(NSString*)string
 {
-    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+//    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4", [self currentTime]];
     
-    BOOL success = [videoData writeToFile:tempPath atomically:NO];
+//    BOOL success = [videoData writeToFile:tempPath atomically:NO];
     
     NSURL* pathURL = [[NSURL alloc] initFileURLWithPath:tempPath];
     
@@ -806,13 +855,13 @@
 
 -(NSURL*) obtainVideoURL:(NSString*)encodedVideo At:(NSIndexPath*)indexPath
 {
-    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:encodedVideo options:NSDataBase64DecodingIgnoreUnknownCharacters];
+//    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:encodedVideo options:NSDataBase64DecodingIgnoreUnknownCharacters];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%ld.mp4", (long)indexPath.row];
     
-    BOOL success = [videoData writeToFile:tempPath atomically:NO];
+//    BOOL success = [videoData writeToFile:tempPath atomically:NO];
     
     NSURL* pathURL = [[NSURL alloc] initFileURLWithPath:tempPath];
     return pathURL;
@@ -856,7 +905,7 @@
         NSString* videoInString = [self videoToNSString:videoURL];
         
         [self.chatRoom.contentFireBase setValue:@{@"user":self.user.name,
-                                           @"video":videoInString}];
+                                                  @"video":videoInString}];
     }
     
     [picker dismissViewControllerAnimated:YES completion:^{
@@ -866,6 +915,8 @@
 
 -(void) mediaButtonTapped
 {
+    self.mediaButton.backgroundColor = [UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1];
+    
     if ([self systemVersionLessThan8])
     {
         UIAlertView* mediaAlert = [[UIAlertView alloc] initWithTitle:@"Share something!" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Take a Picture or Video", @"Choose an existing Photo or Video", @"Share location", nil];
@@ -929,11 +980,13 @@
                      }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     return [self.messages count];
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
  //height in points
     if ([self.messages count] !=0)
     {
@@ -1024,16 +1077,8 @@
     [volumeViewSlider sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
 
-//-(void)thumbnailImageRetrieved:(NSNotification*)notification
-//{
-//    NSDictionary *userInfo = [notification userInfo];
-//    UIImage *image = [userInfo valueForKey:MPMoviePlayerThumbnailImageKey];
-//    self.thumbnail = image;
-//}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     NSDictionary *content=self.messages[indexPath.row];
     
     if (content[@"video"])
@@ -1277,6 +1322,19 @@
         {
         }];
     }
+    else if (content[@"image"])
+    {
+        UITableViewCell* imageCell = [self.tableView cellForRowAtIndexPath:indexPath];
+        KJDImageDisplayViewController* imageDisplayVC = [[KJDImageDisplayViewController alloc]init];
+        
+        //in future might cause trouble bc we use leftCell for both right and left scenario.
+        imageDisplayVC.mapImage = ((KJDLeftMediaCell*)imageCell).media.image;
+        [imageDisplayVC setModalPresentationStyle:UIModalPresentationFullScreen];
+        
+        [self presentViewController:imageDisplayVC animated:YES completion:^
+         {
+         }];
+    }
     else if (content[@"video"])
     {
         NSURL* videoURL = [self obtainVideoURL:content[@"video"] At:indexPath];
@@ -1286,5 +1344,26 @@
     }
 }
 
+-(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [self setCellColor:[UIColor colorWithRed:0.5 green:.3 blue:.7 alpha:.3] ForCell:cell];
+}
+
+-(void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [self setCellColor:[UIColor clearColor] ForCell:cell];
+}
+
+- (void)setCellColor:(UIColor *)color ForCell:(UITableViewCell *)cell {
+    cell.contentView.backgroundColor = color;
+    cell.backgroundColor = color;
+}
 
 @end

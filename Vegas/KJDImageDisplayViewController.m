@@ -9,6 +9,8 @@
 #import "KJDImageDisplayViewController.h"
 #import "KJDChatRoomImageCellLeft.h"
 #import "KJDChatRoomImageCellRight.h"
+#import "KJDLoginViewController.h"
+#import <RNBlurModalView.h>
 
 @interface KJDImageDisplayViewController ()
 
@@ -27,7 +29,23 @@
     [self.view sendSubviewToBack:backgroundImage];
     
     [self setUpDisplay];
-    [self setUpDoneButton];
+//    [self setUpDoneButton];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                          action:@selector(dismissImageView)];
+    tap.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tap];
+    [self presentIntroMessage];
+}
+
+-(void) presentIntroMessage
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:hasRunAppOnceKey] == NO)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Hey!" message:@"To return to the Chat Room, simply tap the screen!"];
+        [modal show];
+        [defaults setBool:YES forKey:hasRunAppOnceKey];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -37,50 +55,59 @@
 -(void) setUpDisplay
 {
     self.map = [[UIImageView alloc]initWithImage:self.mapImage];
-
+    CGFloat ratio = self.mapImage.size.height/self.mapImage.size.width;
+    CGFloat scaledHeight = ratio * self.view.frame.size.width;
+    self.map.frame = CGRectMake(self.view.center.x - self.view.frame.size.width/2.0f, self.view.center.y - scaledHeight/2.0f, self.view.frame.size.width, scaledHeight);
+    
     [self.view addSubview:self.map];
-    self.map.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.map.translatesAutoresizingMaskIntoConstraints = NO;
     
-    NSLayoutConstraint *mapViewTop = [NSLayoutConstraint constraintWithItem:self.map
-                                                                  attribute:NSLayoutAttributeTop
-                                                                  relatedBy:NSLayoutRelationEqual
-                                                                     toItem:self.view
-                                                                  attribute:NSLayoutAttributeTop
-                                                                 multiplier:1.0
-                                                                   constant:0.0];
-    
-    NSLayoutConstraint *mapViewBottom = [NSLayoutConstraint constraintWithItem:self.map
-                                                                     attribute:NSLayoutAttributeBottom
-                                                                     relatedBy:NSLayoutRelationEqual
-                                                                        toItem:self.view
-                                                                     attribute:NSLayoutAttributeBottom
-                                                                    multiplier:1.0
-                                                                      constant:-60.0];
-    
-    NSLayoutConstraint *mapViewWidth = [NSLayoutConstraint constraintWithItem:self.map
-                                                                    attribute:NSLayoutAttributeWidth
-                                                                    relatedBy:NSLayoutRelationEqual
-                                                                       toItem:self.view
-                                                                    attribute:NSLayoutAttributeWidth
-                                                                   multiplier:1.0
-                                                                     constant:0.0];
-    
-    NSLayoutConstraint *mapViewLeft = [NSLayoutConstraint constraintWithItem:self.map
-                                                                   attribute:NSLayoutAttributeLeft
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self.view
-                                                                   attribute:NSLayoutAttributeLeft
-                                                                  multiplier:1.0
-                                                                    constant:0.0];
-    
-    [self.view addConstraints:@[mapViewTop, mapViewBottom, mapViewWidth, mapViewLeft]];
+//    NSLayoutConstraint *mapViewTop = [NSLayoutConstraint constraintWithItem:self.map
+//                                                                  attribute:NSLayoutAttributeTop
+//                                                                  relatedBy:NSLayoutRelationEqual
+//                                                                     toItem:self.view
+//                                                                  attribute:NSLayoutAttributeTop
+//                                                                 multiplier:1.0
+//                                                                   constant:0.0];
+//    
+//    NSLayoutConstraint *mapViewBottom = [NSLayoutConstraint constraintWithItem:self.map
+//                                                                     attribute:NSLayoutAttributeBottom
+//                                                                     relatedBy:NSLayoutRelationEqual
+//                                                                        toItem:self.view
+//                                                                     attribute:NSLayoutAttributeBottom
+//                                                                    multiplier:1.0
+//                                                                      constant:-60.0];
+//    
+//    NSLayoutConstraint *mapViewWidth = [NSLayoutConstraint constraintWithItem:self.map
+//                                                                    attribute:NSLayoutAttributeWidth
+//                                                                    relatedBy:NSLayoutRelationEqual
+//                                                                       toItem:self.view
+//                                                                    attribute:NSLayoutAttributeWidth
+//                                                                   multiplier:1.0
+//                                                                     constant:0.0];
+//    
+//    NSLayoutConstraint *mapViewLeft = [NSLayoutConstraint constraintWithItem:self.map
+//                                                                   attribute:NSLayoutAttributeLeft
+//                                                                   relatedBy:NSLayoutRelationEqual
+//                                                                      toItem:self.view
+//                                                                   attribute:NSLayoutAttributeLeft
+//                                                                  multiplier:1.0
+//                                                                    constant:0.0];
+//    
+//    [self.view addConstraints:@[mapViewTop, mapViewBottom, mapViewWidth, mapViewLeft]];
+}
+
+-(void) dismissImageView
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+    }];
 }
 
 -(void) setUpDoneButton
 {
     self.doneButton = [[UIButton alloc] init];
     [self.view addSubview:self.doneButton];
-    self.doneButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
+    self.doneButton.backgroundColor=[UIColor colorWithRed:4/255.0f green:74/255.0f blue:11/255.0f alpha:1];
     self.doneButton.layer.cornerRadius=10.0f;
     self.doneButton.layer.masksToBounds=YES;
     [self.doneButton setAttributedTitle:[[NSAttributedString alloc] initWithString:@"Done!" attributes:nil] forState:UIControlStateNormal];
@@ -89,15 +116,21 @@
     [self.doneButton addTarget:self action:@selector(doneButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     self.doneButton.translatesAutoresizingMaskIntoConstraints = NO;
     
+    NSLayoutConstraint* doneButtonHeight = [NSLayoutConstraint constraintWithItem:self.doneButton
+                                                                        attribute:NSLayoutAttributeHeight
+                                                                        relatedBy:NSLayoutRelationEqual
+                                                                           toItem:self.view
+                                                                        attribute:NSLayoutAttributeHeight
+                                                                       multiplier:0
+                                                                         constant:60];
     
-    
-    NSLayoutConstraint *doneButtonTop = [NSLayoutConstraint constraintWithItem:self.doneButton
-                                                                   attribute:NSLayoutAttributeTop
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self.map
-                                                                   attribute:NSLayoutAttributeBottom
-                                                                  multiplier:1.0
-                                                                    constant:4.0];
+//    NSLayoutConstraint *doneButtonTop = [NSLayoutConstraint constraintWithItem:self.doneButton
+//                                                                   attribute:NSLayoutAttributeTop
+//                                                                   relatedBy:NSLayoutRelationEqual
+//                                                                      toItem:self.map
+//                                                                   attribute:NSLayoutAttributeBottom
+//                                                                  multiplier:1.0
+//                                                                    constant:4.0];
     
     NSLayoutConstraint *doneButtonBottom = [NSLayoutConstraint constraintWithItem:self.doneButton
                                                                       attribute:NSLayoutAttributeBottom
@@ -123,12 +156,12 @@
                                                                    multiplier:1.0
                                                                      constant:4.0];
     
-    [self.view addConstraints:@[doneButtonTop, doneButtonBottom, doneButtonRight, doneButtonLeft]];
+    [self.view addConstraints:@[doneButtonHeight, doneButtonBottom, doneButtonRight, doneButtonLeft]];
 }
 
 - (void)doneButtonTapped
 {
-    self.doneButton.backgroundColor=[UIColor colorWithRed:0.027 green:0.58 blue:0.373 alpha:1];
+    self.doneButton.backgroundColor=[UIColor colorWithRed:4/255.0f green:74/255.0f blue:11/255.0f alpha:1];
     self.doneButton.titleLabel.textColor=[UIColor whiteColor];
     [self dismissViewControllerAnimated:YES completion:^{
     }];
@@ -142,7 +175,7 @@
 
 -(void)doneButtonNormal
 {
-    self.doneButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
+    self.doneButton.backgroundColor=[UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:.5];
 }
 
 @end

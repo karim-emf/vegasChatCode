@@ -10,7 +10,8 @@
 
 @implementation chatIDTextField
 
-- (CGRect)rightViewRectForBounds:(CGRect)bounds{
+- (CGRect)rightViewRectForBounds:(CGRect)bounds
+{
     CGRect rightBounds = CGRectMake(bounds.size.width-22, bounds.size.height/2.7, 15, 15);
     return rightBounds ;
 }

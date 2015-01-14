@@ -15,7 +15,6 @@
 
 @class KJDUser;
 
-
 @interface KJDChatRoomViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property(strong,nonatomic)KJDUser *user;
@@ -25,6 +24,7 @@
 @property(strong,nonatomic)UITableViewCell *cell;
 @property(strong,nonatomic)NSNumber* userCount;
 @property(nonatomic)BOOL firstTimeInRoom;
+@property(nonatomic)BOOL currentlyInRoom;
 
 -(void) sendMapImage:(UIImage*)map;
 -(void)removeUserFromChatRoom;

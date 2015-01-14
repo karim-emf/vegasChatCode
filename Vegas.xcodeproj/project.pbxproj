@@ -35,6 +35,9 @@
 		8A39385F1A53337900CBB5E1 /* KJDLeftMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A39385E1A53337900CBB5E1 /* KJDLeftMessageCell.m */; };
 		8A3938621A53AA1700CBB5E1 /* KJDRightMediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A3938611A53AA1700CBB5E1 /* KJDRightMediaCell.m */; };
 		8A3938651A53B7DA00CBB5E1 /* KJDLeftMediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A3938641A53B7DA00CBB5E1 /* KJDLeftMediaCell.m */; };
+		8A3CB88D1A60105B00CDA3D8 /* appicon-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A3CB88C1A60105B00CDA3D8 /* appicon-60@3x.png */; };
+		8A3CB8901A62FC3B00CDA3D8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A3CB88E1A62FC3B00CDA3D8 /* Default.png */; };
+		8A3CB8911A62FC3B00CDA3D8 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A3CB88F1A62FC3B00CDA3D8 /* Default@2x.png */; };
 		8A45F5331A38020900A69E17 /* myLaunchImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A45F5321A38020900A69E17 /* myLaunchImage.png */; };
 		8A45F5351A3829DF00A69E17 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A45F5341A3829DF00A69E17 /* QuickLook.framework */; };
 		8A45F5381A382BAF00A69E17 /* KJDImageDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45F5371A382BAF00A69E17 /* KJDImageDisplayViewController.m */; };
@@ -134,6 +137,9 @@
 		8A3938611A53AA1700CBB5E1 /* KJDRightMediaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDRightMediaCell.m; sourceTree = "<group>"; };
 		8A3938631A53B7DA00CBB5E1 /* KJDLeftMediaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDLeftMediaCell.h; sourceTree = "<group>"; };
 		8A3938641A53B7DA00CBB5E1 /* KJDLeftMediaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDLeftMediaCell.m; sourceTree = "<group>"; };
+		8A3CB88C1A60105B00CDA3D8 /* appicon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon-60@3x.png"; sourceTree = "<group>"; };
+		8A3CB88E1A62FC3B00CDA3D8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		8A3CB88F1A62FC3B00CDA3D8 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		8A45F5321A38020900A69E17 /* myLaunchImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = myLaunchImage.png; sourceTree = "<group>"; };
 		8A45F5341A3829DF00A69E17 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		8A45F5361A382BAF00A69E17 /* KJDImageDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDImageDisplayViewController.h; sourceTree = "<group>"; };
@@ -238,27 +244,19 @@
 		0BAA8C611A243F1800B7E5AF /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				8A3CB8921A6311F900CDA3D8 /* old & unused Images */,
 				8A70D8301A5EC63500B225FF /* images.xcassets */,
-				8AF7FF591A3BAE7800A9B4E4 /* oldVegasAppIcon.png */,
-				8AD5156D1A5E328F00844DAF /* vegasAppicon.png */,
 				0BAA8C651A2441FB00B7E5AF /* background.png */,
+				8A3CB88E1A62FC3B00CDA3D8 /* Default.png */,
+				8A3CB88F1A62FC3B00CDA3D8 /* Default@2x.png */,
 				8A70D8321A5EC72300B225FF /* Default-568h@2x.png */,
 				8A70D8331A5EC72300B225FF /* Default-667h@2x.png */,
+				8A3CB88C1A60105B00CDA3D8 /* appicon-60@3x.png */,
 				8A70D8361A5EC75300B225FF /* Default-Portrait-736h@3x.png */,
-				8AF7FF5B1A3BB09800A9B4E4 /* oldDefault-568h@2x.png */,
-				8AD5156F1A5E32F100844DAF /* old2Default-568h@2x.png */,
 				0BAA8C5F1A243F1300B7E5AF /* magnifyingglass.png */,
-				8A45F5321A38020900A69E17 /* myLaunchImage.png */,
-				8AD8FB0D1A4C96F900187553 /* gear-7.png */,
-				8AD8FB111A4C973200187553 /* photo-abstract-71.png */,
 				8AD8FB131A4C993A00187553 /* photo-abstract-7.png */,
-				8AD8FB0F1A4C972400187553 /* paper-plane-7.png */,
-				8AD8FB0B1A4C96ED00187553 /* games-abstract-7.png */,
 				8AD8FB151A4D075100187553 /* settings18.png */,
 				8AD515661A5C856100844DAF /* play.png */,
-				8AD515681A5C856800844DAF /* bt_play.png */,
-				8A70D82A1A5EB1B100B225FF /* vegasSign2.png */,
-				8A70D82C1A5EB4EF00B225FF /* vegasSign3.png */,
 				8A70D82E1A5EC24F00B225FF /* vegasSign.png */,
 			);
 			name = Images;
@@ -342,6 +340,25 @@
 				5DCB63D569D4265F5E712AAA /* Pods-Vegas.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		8A3CB8921A6311F900CDA3D8 /* old & unused Images */ = {
+			isa = PBXGroup;
+			children = (
+				8AF7FF5B1A3BB09800A9B4E4 /* oldDefault-568h@2x.png */,
+				8AD5156F1A5E32F100844DAF /* old2Default-568h@2x.png */,
+				8AD8FB111A4C973200187553 /* photo-abstract-71.png */,
+				8AD8FB0D1A4C96F900187553 /* gear-7.png */,
+				8A45F5321A38020900A69E17 /* myLaunchImage.png */,
+				8AD5156D1A5E328F00844DAF /* vegasAppicon.png */,
+				8AF7FF591A3BAE7800A9B4E4 /* oldVegasAppIcon.png */,
+				8AD8FB0B1A4C96ED00187553 /* games-abstract-7.png */,
+				8AD515681A5C856800844DAF /* bt_play.png */,
+				8A70D82A1A5EB1B100B225FF /* vegasSign2.png */,
+				8AD8FB0F1A4C972400187553 /* paper-plane-7.png */,
+				8A70D82C1A5EB4EF00B225FF /* vegasSign3.png */,
+			);
+			name = "old & unused Images";
 			sourceTree = "<group>";
 		};
 		8A45F54D1A38B28100A69E17 /* myXibs */ = {
@@ -535,6 +552,7 @@
 				8AD515701A5E32F100844DAF /* old2Default-568h@2x.png in Resources */,
 				8A70D82F1A5EC24F00B225FF /* vegasSign.png in Resources */,
 				8AD8FB0E1A4C96F900187553 /* gear-7.png in Resources */,
+				8A3CB8901A62FC3B00CDA3D8 /* Default.png in Resources */,
 				8AF7FF5C1A3BB09800A9B4E4 /* oldDefault-568h@2x.png in Resources */,
 				8A45F55B1A38B31500A69E17 /* KJDChatRoomTableViewCellLeft.xib in Resources */,
 				8A70D8341A5EC72300B225FF /* Default-568h@2x.png in Resources */,
@@ -558,9 +576,11 @@
 				8A45F5471A389FA400A69E17 /* KJDMediaCellRight.xib in Resources */,
 				8A45F5611A38B31500A69E17 /* KJDChatRoomImageCellRight.xib in Resources */,
 				0BAA8C661A2441FB00B7E5AF /* background.png in Resources */,
+				8A3CB8911A62FC3B00CDA3D8 /* Default@2x.png in Resources */,
 				8A70D8371A5EC75300B225FF /* Default-Portrait-736h@3x.png in Resources */,
 				0BAA8C601A243F1300B7E5AF /* magnifyingglass.png in Resources */,
 				8AF7FF5A1A3BAE7800A9B4E4 /* oldVegasAppIcon.png in Resources */,
+				8A3CB88D1A60105B00CDA3D8 /* appicon-60@3x.png in Resources */,
 				8AD8FB161A4D075100187553 /* settings18.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -742,6 +762,7 @@
 			baseConfigurationReference = CB5DAB915AC2BF4B352376B8 /* Pods-Vegas.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Vegas",
@@ -758,6 +779,7 @@
 			baseConfigurationReference = 5DCB63D569D4265F5E712AAA /* Pods-Vegas.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Vegas",

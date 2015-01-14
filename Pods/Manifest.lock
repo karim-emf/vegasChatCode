@@ -1,5 +1,5 @@
 PODS:
-  - Firebase (2.0.3)
+  - Firebase (2.1.1)
   - RNBlurModalView (0.1.0)
 
 DEPENDENCIES:
@@ -7,7 +7,7 @@ DEPENDENCIES:
   - RNBlurModalView (~> 0.1.0)
 
 SPEC CHECKSUMS:
-  Firebase: bb958f1328ab902972d4419cbec232a989b5c613
+  Firebase: 9def585cc21e1e331d44200dfda6b34f58a76357
   RNBlurModalView: 38380c10dcaf7804f7ba5e3516abcaf8bc8eddb3
 
 COCOAPODS: 0.35.0.rc2

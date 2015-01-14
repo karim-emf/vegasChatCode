@@ -12,7 +12,7 @@
 
 @property(strong,nonatomic)KJDUser *user;
 @property(strong,nonatomic)NSMutableArray *messages;
-@property(strong,nonatomic)NSString *firebaseRoomURL;
+@property(strong,nonatomic)NSString *firebaseRoomName;
 @property(strong,nonatomic)NSString *firebaseURL;
 @property(strong,nonatomic)Firebase *firebase;
 
@@ -21,6 +21,7 @@
 @property(strong,nonatomic)Firebase *nameSwitchFireBase;
 @property(strong,nonatomic)NSNumber* userCount;
 @property(nonatomic) BOOL firstTimeInRoom;
+@property(nonatomic, strong) UILocalNotification* chatNotification;
  
 -(instancetype)initWithUser:(KJDUser *)user;
 -(instancetype)init;

@@ -5,39 +5,58 @@
 #import "KJDChatRoom.h"
 #import <Firebase/Firebase.h>
 #import "KJDChatRoomViewController.h"
+#import "AppDelegate.h"
 
 
 @implementation KJDChatRoom
 
--(instancetype)initWithUser:(KJDUser *)user{
+-(instancetype)initWithUser:(KJDUser *)user
+{
     self=[super init];
-    if (self) {
+    if (self)
+    {
         _user=user;
         _messages=[[NSMutableArray alloc]init];
+       [self setUpChatNotification];
     }
     return self;
 }
 
--(instancetype)init{
+-(instancetype)init
+{
     return [self initWithUser:self.user];
+}
+
+-(void) setUpChatNotification
+{
+   self.chatNotification = [[UILocalNotification alloc]init];
+   self.chatNotification.alertBody = [NSString stringWithFormat:@"You received a new message!"];
+   self.chatNotification.soundName = UILocalNotificationDefaultSoundName;
+   self.chatNotification.alertLaunchImage = @"appicon-60@3x";
 }
 
 -(void)fetchMessagesFromCloud:(FDataSnapshot *)snapshot withBlock:(void (^)(NSMutableArray *messages))completionBlock
 {
-    NSMutableArray *messagesArray=[[NSMutableArray alloc]init];
-   if ([snapshot.value isKindOfClass:[NSArray class]])
-   {
-      [messagesArray addObjectsFromArray:snapshot.value];
-   }
-   else if ([snapshot.value isKindOfClass:[NSDictionary class]])
+   NSMutableArray *messagesArray=[[NSMutableArray alloc]init];
+   
+   if ([snapshot.value isKindOfClass:[NSDictionary class]])
    {
       [messagesArray addObject:snapshot.value];
+      UIApplicationState appState = [[UIApplication sharedApplication] applicationState];
+      AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+      
+          if (! appDelegate.chatRoomVCDelegate.currentlyInRoom)
+          {
+             [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+             [[UIApplication sharedApplication] cancelLocalNotification:self.chatNotification];
+          }
+          else if ( appState == UIApplicationStateBackground || appState == UIApplicationStateInactive)
+          {
+             [UIApplication sharedApplication].applicationIconBadgeNumber = 1;
+             [[UIApplication sharedApplication] presentLocalNotificationNow:self.chatNotification];
+          }
    }
-   else if ([snapshot.value isKindOfClass:[NSString class]])
-   {
-      [messagesArray addObject:snapshot.value];
-   }
-    completionBlock(messagesArray);
+   completionBlock(messagesArray);
 }
 
 -(void)fetchUserCountFromCloud:(FDataSnapshot *)snapshot withBlock:(void (^)(NSNumber *count))completionBlock
@@ -82,7 +101,7 @@
 
 - (void)setupFirebaseWithCompletionBlock:(void (^)(BOOL completed))completionBlock
 {
-   self.firebaseURL = [NSString stringWithFormat:@"https://boiling-torch-9946.firebaseio.com/%@", self.firebaseRoomURL];
+   self.firebaseURL = [NSString stringWithFormat:@"https://boiling-torch-9946.firebaseio.com/%@", self.firebaseRoomName];
    
    self.firebase = [[Firebase alloc] initWithUrl:self.firebaseURL];
    

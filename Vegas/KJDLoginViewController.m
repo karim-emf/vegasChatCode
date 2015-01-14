@@ -21,7 +21,8 @@
 
 @implementation KJDLoginViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
     backgroundImage.frame=self.view.frame;
@@ -32,6 +33,7 @@
     [self.view sendSubviewToBack:backgroundImage];
     [self.view addSubview:vegasSign];
     self.navigationController.navigationBarHidden = YES;
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Exit" style:UIBarButtonItemStyleDone target:nil action:nil];
     [self setupViewsAndConstraints];
     
     if ( ! self.user)
@@ -42,6 +44,17 @@
                                                                           action:@selector(dismissKeyboard)];
     tap.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tap];
+    [self presentIntroMessage];
+}
+
+-(void) presentIntroMessage
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:hasRunAppOnceKey] == NO)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Welcome to Vegas!" message:@"Vegas is a completely anonymous chat app, so no need to type in a username or password. In order to chat with a friend, simply enter a code in the field and tell him to enter the same code. Any user who types that code will enter your chat room, so be sure to be creative!"];
+        [modal show];
+    }
 }
 
 -(CGFloat) heightForImage:(UIImage*)picture
@@ -51,36 +64,21 @@
     return cellHeight;
 }
 
--(void)dismissKeyboard {
+-(void)dismissKeyboard
+{
     [self.chatCodeField resignFirstResponder];
 }
 
--(BOOL) textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    if ([self.chatCodeField.text length]<4) {
-        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Invalid Chat ID!" message:@"The code must be at least 4 characters long"];
-        [modal show];
-        self.chatCodeField.text=@"";
-    }else{
-        self.chatRoom=[[KJDChatRoom alloc]initWithUser:self.user];
-        self.chatRoom.firebaseRoomURL=self.chatCodeField.text;
-//        self.chatRoom.user=self.user; // no era inecesario?
-        KJDChatRoomViewController *destinationViewController = [[KJDChatRoomViewController alloc] init];
-        destinationViewController.chatRoom=self.chatRoom;
-//        destinationViewController.user=self.user;
-        [self.navigationController pushViewController:destinationViewController animated:YES];
-    }
-    return YES;
-}
 
-- (void)setupViewsAndConstraints{
+- (void)setupViewsAndConstraints
+{
 //    [self setupLabel];
     [self setupChatCodeField];
     [self setupEnterButton];
 }
 
-- (void)setupLabel{
+- (void)setupLabel
+{
     self.enterLabel = [[UILabel alloc] init];
     [self.view addSubview:self.enterLabel];
     self.enterLabel.text = @"Enter Chatroom ID";
@@ -135,10 +133,7 @@
     self.chatCodeField.rightView=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"magnifyingglass"]];
     self.chatCodeField.attributedPlaceholder =
     [[NSAttributedString alloc] initWithString:@"Enter Chatroom ID"
-                                    attributes:@{
-                                                 NSForegroundColorAttributeName: [UIColor darkGrayColor]
-//                                                 NSFontAttributeName : [UIFont fontWithName:@"Roboto-Bold" size:17.0]
-                                                 }
+                                    attributes:@{NSForegroundColorAttributeName: [UIColor darkGrayColor]}
      ];
     self.chatCodeField.layer.borderColor=[borderColor CGColor];
     self.chatCodeField.layer.borderWidth=1.0f;
@@ -159,7 +154,7 @@
                                                                            toItem:self.view
                                                                         attribute:NSLayoutAttributeTop
                                                                        multiplier:1.0
-                                                                         constant:30.0 + /*150.0 */ [self heightForImage:[UIImage imageNamed:@"vegasSign"]] + 10.0];
+                                                                         constant:30.0 + [self heightForImage:[UIImage imageNamed:@"vegasSign"]] + 10.0];
     
     NSLayoutConstraint *chatCodeFieldWidth = [NSLayoutConstraint constraintWithItem:self.chatCodeField
                                                                           attribute:NSLayoutAttributeWidth
@@ -229,13 +224,15 @@
 
 -(void)enterButtonReleased{
     self.enterButton.backgroundColor=[UIColor colorWithRed:(4/255.0f) green:(74/255.0f) blue:(11/255.0f) alpha:1];
-    if ([self.chatCodeField.text length]<4) {
-        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Invalid Chat ID!" message:@"The code must be at least 4 characters long"];
+    NSRange whiteSpace = [self.chatCodeField.text rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
+    if ([self.chatCodeField.text length]<4 || whiteSpace.location != NSNotFound)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Invalid Chat ID!" message:@"The code must be at least 4 characters long and must not contain blank spaces"];
         [modal show];
         self.chatCodeField.text=@"";
     }else{
         self.chatRoom=[[KJDChatRoom alloc]initWithUser:self.user];
-        self.chatRoom.firebaseRoomURL=self.chatCodeField.text;
+        self.chatRoom.firebaseRoomName=self.chatCodeField.text;
 //        self.chatRoom.user=self.user;
         KJDChatRoomViewController *destinationViewController = [[KJDChatRoomViewController alloc] init];
         destinationViewController.chatRoom=self.chatRoom;
@@ -245,8 +242,30 @@
     }
 }
 
+-(BOOL) textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    if ([self.chatCodeField.text length]<4)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Invalid Chat ID!" message:@"The code must be at least 4 characters long"];
+        [modal show];
+        self.chatCodeField.text=@"";
+    }
+    else
+    {
+        self.chatRoom=[[KJDChatRoom alloc]initWithUser:self.user];
+        self.chatRoom.firebaseRoomName=self.chatCodeField.text;
+        
+        KJDChatRoomViewController *destinationViewController = [[KJDChatRoomViewController alloc] init];
+        destinationViewController.chatRoom=self.chatRoom;
+        [self.navigationController pushViewController:destinationViewController animated:YES];
+    }
+    return YES;
+}
+
+
 -(void)enterButtonTappedForBackground{
-    self.enterButton.backgroundColor = [UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:1];
+    self.enterButton.backgroundColor = [UIColor colorWithRed:0.016 green:0.341 blue:0.22 alpha:.5];
 }
 
 @end

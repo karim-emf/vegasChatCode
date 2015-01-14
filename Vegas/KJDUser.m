@@ -8,7 +8,8 @@
 
 NSString *const lettersAndNumbersString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
--(NSString *)createRandomUsername{
+-(NSString *)createRandomUsername
+{
     NSMutableString *randomString = [NSMutableString stringWithCapacity:5];
     for (NSUInteger i = 0; i < 5; i++) {
         u_int32_t randomNumber = arc4random() % [lettersAndNumbersString length];
@@ -18,11 +19,13 @@ NSString *const lettersAndNumbersString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJ
     return randomString;
 }
 
--(instancetype)init{
+-(instancetype)init
+{
     return [self initWithRandomName];
 }
 
--(instancetype)initWithRandomName{
+-(instancetype)initWithRandomName
+{
     self=[super init];
     if (self) {
         _name=[self createRandomUsername];

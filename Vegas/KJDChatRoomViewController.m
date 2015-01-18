@@ -89,16 +89,44 @@
                                                                           action:@selector(dismissKeyboard)];
     tap.cancelsTouchesInView = NO;
     [self.tableView addGestureRecognizer:tap];
-    [self presentIntroMessage];
+    [self presentIntroMessageWithBlock:^{
+        [self presentSecondMessageWithBlock:^{
+            [self presentThirdMessageWithBlock:^{
+            }];
+        }];
+    }];
 }
 
--(void) presentIntroMessage
+-(void) presentIntroMessageWithBlock:(void (^)())completion
 {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults boolForKey:hasRunAppOnceKey] == NO)
     {
-        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Welcome to your first Vegas Chat Room!" message:@"To type a message, tap the field located at the bottom. To share media, tap the button at the bottom left.\nFor anonymousity, you have been assigned a random name; if you wish to change your name, tap the settings button located at the top right. To exit the chat room tap the Exit button at the upper left. Note that messages sent during your absence will not be received. As soon as all users exit, the room will be deleted and there will be no trace of its existence, ensuring that:\n * What happens in Vegas *\n * stays in Vegas *."];
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"" message:@"Note that messages sent during your absence will not be received.\n As soon as all users exit, the room will be deleted and there will be no trace of its existence, ensuring that:\n * What happens in Vegas *\n * stays in Vegas *"];
         [modal show];
+        completion();
+    }
+}
+
+-(void) presentSecondMessageWithBlock:(void (^)())completion
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:hasRunAppOnceKey] == NO)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"" message:@"For anonymity, you have been assigned a random name; if you wish to change your name, tap the settings button located at the top right. To exit the chat room tap the Exit button at the upper left."];
+        [modal show];
+        completion();
+    }
+}
+
+-(void) presentThirdMessageWithBlock:(void (^)())completion
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:hasRunAppOnceKey] == NO)
+    {
+        RNBlurModalView *modal = [[RNBlurModalView alloc] initWithViewController:self title:@"Welcome to your first Vegas Chat Room!" message:@"To type a message, tap the field located at the bottom. To share media, tap the button at the bottom left."];
+        [modal show];
+        completion();
     }
 }
 
@@ -829,13 +857,13 @@
 
 -(MPMoviePlayerController*)stringToVideo:(NSString*)string
 {
-//    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%@.mp4", [self currentTime]];
     
-//    BOOL success = [videoData writeToFile:tempPath atomically:NO];
+    BOOL success = [videoData writeToFile:tempPath atomically:NO];
     
     NSURL* pathURL = [[NSURL alloc] initFileURLWithPath:tempPath];
     
@@ -855,13 +883,13 @@
 
 -(NSURL*) obtainVideoURL:(NSString*)encodedVideo At:(NSIndexPath*)indexPath
 {
-//    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:encodedVideo options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData* videoData = [[NSData alloc] initWithBase64EncodedString:encodedVideo options:NSDataBase64DecodingIgnoreUnknownCharacters];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *tempPath = [documentsDirectory stringByAppendingFormat:@"/%ld.mp4", (long)indexPath.row];
     
-//    BOOL success = [videoData writeToFile:tempPath atomically:NO];
+    BOOL success = [videoData writeToFile:tempPath atomically:NO];
     
     NSURL* pathURL = [[NSURL alloc] initFileURLWithPath:tempPath];
     return pathURL;

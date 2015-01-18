@@ -30,6 +30,11 @@
         [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
         [[UIApplication sharedApplication] registerForRemoteNotifications];
     }
+    else
+    {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    }
 }
 
 - (void)setupApp:(UIApplication *)application

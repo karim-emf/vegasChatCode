@@ -15,6 +15,7 @@
 @interface KJDImageDisplayViewController ()
 
 @property (strong, nonatomic) UIButton *doneButton;
+@property (strong, nonatomic) UILabel *vegasLabel;
 
 @end
 
@@ -29,6 +30,7 @@
     [self.view sendSubviewToBack:backgroundImage];
     
     [self setUpDisplay];
+    [self setUpVegasLabel];
 //    [self setUpDoneButton];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissImageView)];
@@ -50,6 +52,18 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+-(void) setUpVegasLabel
+{
+    self.vegasLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, [UIApplication sharedApplication].statusBarFrame.size.height, self.view.frame.size.width, 20)];
+    NSMutableAttributedString *attributedVegas = [[NSMutableAttributedString alloc]initWithString:@"Vegas!"];
+    [attributedVegas addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Bold" size:15] range:NSMakeRange(0, [attributedVegas length])];
+    self.vegasLabel.attributedText = attributedVegas;
+    self.vegasLabel.textAlignment = NSTextAlignmentCenter;
+    self.vegasLabel.backgroundColor = [UIColor clearColor];
+    self.vegasLabel.textColor = [UIColor colorWithRed:4/255.0f green:74/255.0f blue:11/255.0f alpha:1];
+    [self.view addSubview:self.vegasLabel];
 }
 
 -(void) setUpDisplay

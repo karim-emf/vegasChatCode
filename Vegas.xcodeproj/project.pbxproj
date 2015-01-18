@@ -55,6 +55,7 @@
 		8A45F5601A38B31500A69E17 /* KJDChatRoomImageCellLeft.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45F5571A38B31500A69E17 /* KJDChatRoomImageCellLeft.m */; };
 		8A45F5611A38B31500A69E17 /* KJDChatRoomImageCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A45F5581A38B31500A69E17 /* KJDChatRoomImageCellRight.xib */; };
 		8A45F5621A38B31500A69E17 /* KJDChatRoomImageCellRight.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A45F55A1A38B31500A69E17 /* KJDChatRoomImageCellRight.m */; };
+		8A5A6D951A6ACE52005E8C7E /* AppIcon120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A5A6D941A6ACE52005E8C7E /* AppIcon120x120.png */; };
 		8A70D82B1A5EB1B100B225FF /* vegasSign2.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70D82A1A5EB1B100B225FF /* vegasSign2.png */; };
 		8A70D82D1A5EB4EF00B225FF /* vegasSign3.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70D82C1A5EB4EF00B225FF /* vegasSign3.png */; };
 		8A70D82F1A5EC24F00B225FF /* vegasSign.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70D82E1A5EC24F00B225FF /* vegasSign.png */; };
@@ -62,6 +63,7 @@
 		8A70D8341A5EC72300B225FF /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70D8321A5EC72300B225FF /* Default-568h@2x.png */; };
 		8A70D8351A5EC72300B225FF /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70D8331A5EC72300B225FF /* Default-667h@2x.png */; };
 		8A70D8371A5EC75300B225FF /* Default-Portrait-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70D8361A5EC75300B225FF /* Default-Portrait-736h@3x.png */; };
+		8AB77AD61A67F0A80046FC88 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AB77AD51A67F0A80046FC88 /* UIKit.framework */; };
 		8AD5155F1A58CEB400844DAF /* KJDRightVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD5155E1A58CEB400844DAF /* KJDRightVideoCell.m */; };
 		8AD515651A5C34B800844DAF /* KJDVideoDisplayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AD515641A5C34B800844DAF /* KJDVideoDisplayer.m */; };
 		8AD515671A5C856100844DAF /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AD515661A5C856100844DAF /* play.png */; };
@@ -165,6 +167,7 @@
 		8A45F5581A38B31500A69E17 /* KJDChatRoomImageCellRight.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KJDChatRoomImageCellRight.xib; sourceTree = "<group>"; };
 		8A45F5591A38B31500A69E17 /* KJDChatRoomImageCellRight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDChatRoomImageCellRight.h; sourceTree = "<group>"; };
 		8A45F55A1A38B31500A69E17 /* KJDChatRoomImageCellRight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDChatRoomImageCellRight.m; sourceTree = "<group>"; };
+		8A5A6D941A6ACE52005E8C7E /* AppIcon120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AppIcon120x120.png; path = "../../../Downloads/54ae8d4c66406 2/app/assets/iphone/AppIcon120x120.png"; sourceTree = "<group>"; };
 		8A70D82A1A5EB1B100B225FF /* vegasSign2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vegasSign2.png; sourceTree = "<group>"; };
 		8A70D82C1A5EB4EF00B225FF /* vegasSign3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vegasSign3.png; sourceTree = "<group>"; };
 		8A70D82E1A5EC24F00B225FF /* vegasSign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vegasSign.png; sourceTree = "<group>"; };
@@ -172,6 +175,7 @@
 		8A70D8321A5EC72300B225FF /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		8A70D8331A5EC72300B225FF /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x.png"; sourceTree = "<group>"; };
 		8A70D8361A5EC75300B225FF /* Default-Portrait-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait-736h@3x.png"; sourceTree = "<group>"; };
+		8AB77AD51A67F0A80046FC88 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		8AD5155D1A58CEB400844DAF /* KJDRightVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDRightVideoCell.h; sourceTree = "<group>"; };
 		8AD5155E1A58CEB400844DAF /* KJDRightVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KJDRightVideoCell.m; sourceTree = "<group>"; };
 		8AD515631A5C34B800844DAF /* KJDVideoDisplayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KJDVideoDisplayer.h; sourceTree = "<group>"; };
@@ -203,6 +207,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AB77AD61A67F0A80046FC88 /* UIKit.framework in Frameworks */,
 				8A45F5351A3829DF00A69E17 /* QuickLook.framework in Frameworks */,
 				0B24302B1A26971B007E60C1 /* AudioToolbox.framework in Frameworks */,
 				0B24302C1A26971B007E60C1 /* CFNetwork.framework in Frameworks */,
@@ -252,6 +257,7 @@
 				8A70D8321A5EC72300B225FF /* Default-568h@2x.png */,
 				8A70D8331A5EC72300B225FF /* Default-667h@2x.png */,
 				8A3CB88C1A60105B00CDA3D8 /* appicon-60@3x.png */,
+				8A5A6D941A6ACE52005E8C7E /* AppIcon120x120.png */,
 				8A70D8361A5EC75300B225FF /* Default-Portrait-736h@3x.png */,
 				0BAA8C5F1A243F1300B7E5AF /* magnifyingglass.png */,
 				8AD8FB131A4C993A00187553 /* photo-abstract-7.png */,
@@ -448,6 +454,7 @@
 		C7D98B8274A492CDF715EF39 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8AB77AD51A67F0A80046FC88 /* UIKit.framework */,
 				8A45F5341A3829DF00A69E17 /* QuickLook.framework */,
 				0B2430211A26971B007E60C1 /* AudioToolbox.framework */,
 				0B2430221A26971B007E60C1 /* CFNetwork.framework */,
@@ -514,10 +521,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = "Jan Roures Mintenig";
+				ORGANIZATIONNAME = "Karim Mourra";
 				TargetAttributes = {
 					0BB036AE1A1FE0EE0021CCF4 = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = VGWMY5RTZB;
 					};
 					0BB036C71A1FE0EE0021CCF4 = {
 						CreatedOnToolsVersion = 6.1;
@@ -575,6 +583,7 @@
 				8AD5156E1A5E328F00844DAF /* vegasAppicon.png in Resources */,
 				8A45F5471A389FA400A69E17 /* KJDMediaCellRight.xib in Resources */,
 				8A45F5611A38B31500A69E17 /* KJDChatRoomImageCellRight.xib in Resources */,
+				8A5A6D951A6ACE52005E8C7E /* AppIcon120x120.png in Resources */,
 				0BAA8C661A2441FB00B7E5AF /* background.png in Resources */,
 				8A3CB8911A62FC3B00CDA3D8 /* Default@2x.png in Resources */,
 				8A70D8371A5EC75300B225FF /* Default-Portrait-736h@3x.png in Resources */,
@@ -697,7 +706,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: karim mourra";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: karim mourra";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -739,7 +749,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: karim mourra";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: karim mourra";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -763,6 +774,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: karim mourra";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: karim mourra";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Vegas",
@@ -771,6 +784,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "fc33d13a-3806-49de-890e-2079847976d2";
 			};
 			name = Debug;
 		};
@@ -780,6 +794,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: karim mourra";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: karim mourra";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Vegas",
@@ -788,6 +804,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "fc33d13a-3806-49de-890e-2079847976d2";
 			};
 			name = Release;
 		};
@@ -825,6 +842,88 @@
 			};
 			name = Release;
 		};
+		8ADAEA6D1A68D11E00314490 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: karim mourra";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: karim mourra";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Distribution;
+		};
+		8ADAEA6E1A68D11E00314490 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CB5DAB915AC2BF4B352376B8 /* Pods-Vegas.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-2";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: karim mourra";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: karim mourra";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Vegas",
+				);
+				INFOPLIST_FILE = Vegas/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "fc33d13a-3806-49de-890e-2079847976d2";
+			};
+			name = Distribution;
+		};
+		8ADAEA6F1A68D11E00314490 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = VegasTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Vegas.app/Vegas";
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -832,6 +931,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0BB036D01A1FE0EE0021CCF4 /* Debug */,
+				8ADAEA6D1A68D11E00314490 /* Distribution */,
 				0BB036D11A1FE0EE0021CCF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -841,6 +941,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0BB036D31A1FE0EE0021CCF4 /* Debug */,
+				8ADAEA6E1A68D11E00314490 /* Distribution */,
 				0BB036D41A1FE0EE0021CCF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -850,6 +951,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0BB036D61A1FE0EE0021CCF4 /* Debug */,
+				8ADAEA6F1A68D11E00314490 /* Distribution */,
 				0BB036D71A1FE0EE0021CCF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
